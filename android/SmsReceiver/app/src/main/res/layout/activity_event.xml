@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/AppTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@color/red">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:onClick="onBackBtnPressed"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewArchieveBack"
+                android:layout_gravity="center"
+                android:src="@drawable/back_icon" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center|left"
+                android:text="Обзор события"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:layout_gravity="center">
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:background="@color/gray_light"
+        >
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/gray_dark"
+            android:layout_weight="1.1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewScreenGsmLevelArchieve"
+                android:src="@drawable/signal_4"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="SMS"
+                    android:textColor="@color/white"
+                    android:id="@+id/textViewScreenReceiverArchieve"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="03.12.2015 13:25"
+                    android:textColor="@color/gray_time"
+                    android:id="@+id/textViewScreenReceiverDateArchieve" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewScreenSimArchieve"
+                android:src="@drawable/sim"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="237,80 Р"
+                android:textColor="@color/white"
+                android:id="@+id/textViewScreenGmsBalanceArchieve"
+                android:elegantTextHeight="false"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/gray_dark"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewAlarmArchieve"
+                android:src="@drawable/battery_low"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Низкий заряд аккумулятора"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewAlarmArchieve"
+                android:textColor="@color/yellow"
+                android:textSize="18sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp" />
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/gray_dark"
+            android:layout_weight="1.05">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateGuardArchieve"
+                android:src="@drawable/locked"
+                android:onClick="onImgBtnGuardClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateHornArchieve"
+                android:src="@drawable/siren_alarm"
+                android:onClick="onImgBtnHornClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateEngineArchieve"
+                android:src="@drawable/engine_block"
+                android:focusableInTouchMode="true"
+                android:onClick="onImgBtnBlockClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateBatArchieve"
+                android:src="@drawable/battery_alarm"
+                android:onClick="onImgBtnBatClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateBlockArchieve"
+                android:src="@drawable/engine_block"
+                android:onClick="onImgBtnEngineClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/gray_dark"
+            android:layout_weight="1.05">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateIn1Archieve"
+                android:src="@drawable/in1"
+                android:onClick="onImgBtnIn1Click"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateIn2Archieve"
+                android:src="@drawable/in2"
+                android:onClick="onImgBtnIn2Click"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateMoveArchieve"
+                android:src="@drawable/accelerometer"
+                android:onClick="onImgBtnMoveClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateUgonArchieve"
+                android:src="@drawable/mover"
+                android:onClick="onImgBtnUgonClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageViewStateJammArchieve"
+                android:src="@drawable/gsm_jam"
+                android:onClick="onImgBtnJammClick"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/gray_main"
+            android:layout_weight="0.87">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onBtnGpsShowArchieveClick"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"
+                        android:text="GPS"
+                        android:id="@+id/textViewScreenGpsArchieve"
+                        android:layout_gravity="center_horizontal|left"
+                        android:layout_marginLeft="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/gray_time"
+                        android:text="03.12.15"
+                        android:id="@+id/textViewDateValArchieve"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="13:25:47"
+                        android:textColor="@color/gray_time"
+                        android:id="@+id/textViewTimeValArchieve"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="14sp"
+                        android:text="100 км/ч"
+                        android:id="@+id/textViewSpeedValArchieve"
+                        android:textIsSelectable="false"
+                        android:layout_gravity="center_horizontal|left"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageViewScreenBatArchieve"
+                        android:src="@drawable/battery_small" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="13.2 V"
+                        android:id="@+id/textViewBatValArchieve"
+                        android:gravity="center"
+                        android:textIsSelectable="true"
+                        android:textColor="@color/green"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="20sp"
+                        android:layout_gravity="center_vertical|left" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageViewTempArchieve"
+                        android:src="@drawable/temperature"
+                        android:layout_marginTop="1dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="12 °C"
+                        android:id="@+id/textViewTempValArchieve"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="5dp"
+                        android:textSize="20sp"
+                        android:layout_gravity="center_vertical|left"
+                        android:layout_marginLeft="10dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:layout_gravity="center"
+                android:layout_margin="5dp">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageViewBluetoothMode"
+                    android:src="@drawable/bluetooth_off"
+                    android:layout_margin="2dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageViewValetMode"
+                    android:src="@drawable/valet"
+                    android:layout_margin="2dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light"
+        android:layout_weight="5"
+        android:layout_gravity="center_vertical">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/map"
+                android:onClick="onBtnShowGpsOnMapArchieve"
+                android:layout_gravity="center"
+                android:id="@+id/imageViewMenuMap"
+                android:layout_weight="1"
+                android:layout_margin="10dp" />
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

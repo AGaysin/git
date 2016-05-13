@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="cat_device"
+        android:summary="Насройка и описание контроллера2"
+        android:title="Насройка и описание контроллера">
+        <EditTextPreference
+            android:key="pref_phone"
+            android:title="Номер телефона оборудования"
+            android:summary="Введите номер телефоны SIM-карты, установленной в приборе"
+            android:defaultValue=""
+            android:inputType="phone"
+            android:dialogTitle="Введите номер телефона в формате (+79171234567)" />
+        <EditTextPreference
+            android:key="pref_name"
+            android:title="Имя объекта"
+            android:summary="Введите имя объекта"
+            android:defaultValue="Объект 1"
+            android:dialogTitle="Введите имя объекта" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="cat_server"
+        android:summary="Параметры подключения к серверу"
+        android:title="Параметры подключения к серверу">
+        <CheckBoxPreference
+            android:key="key_enable"
+            android:title="Использовать подключение к серверу"
+            android:summary="Для GPRS On-Line мониторинга"
+            android:defaultValue="false" />
+        <EditTextPreference
+            android:key="pref_ip"
+            android:title="IP-адрес"
+            android:summary="IP-адрес"
+            android:defaultValue="000.000.000.000"
+            android:dialogTitle="Введите IP-адрес сервера в формате (000.000.000.000)"
+            android:dependency="key_enable"/>
+        <EditTextPreference
+            android:key="pref_port"
+            android:title="Порт"
+            android:summary="Введите номер порта"
+            android:numeric="integer"
+            android:inputType="numberDecimal"
+            android:maxEms="65535"
+            android:defaultValue="1234"
+            android:dialogTitle="Введите номер порта (от 0 до 65535)"
+            android:dependency="key_enable"/>
+        <EditTextPreference
+            android:key="pref_username"
+            android:title="Имя пользователя"
+            android:summary="Имя пользователя"
+            android:defaultValue="username"
+            android:dialogTitle="Введите имя имя пользователя"
+            android:dependency="key_enable"/>
+        <EditTextPreference
+            android:key="pref_pass"
+            android:title="Пароль"
+            android:summary="Введите пароль"
+            android:password="true"
+            android:defaultValue="password"
+            android:dialogTitle="Введите пароль"
+            android:dependency="key_enable"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="cat_AlarmNotify"
+        android:summary="Параметры оповещения при тревоге"
+        android:title="Параметры оповещения при тревоге">
+        <CheckBoxPreference
+            android:key="keyAlarmNotifyEnable"
+            android:title="Использовать оповещения (не доступно в режиме SMS для Android 4.4 и выше)"
+            android:summary="Использовать оповещения (не доступно в режиме SMS для Android 4.4 и выше)"
+            android:defaultValue="false" />
+        <RingtonePreference
+            android:key="keyAlarmRingtone"
+            android:title="setting_ringtone"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Устанавливает мелодию для звонка (вкл. или выкл.)"
+            android:dependency="keyAlarmNotifyEnable"/>
+        <CheckBoxPreference
+            android:key="keyAlarmVibro"
+            android:title="Использовать режим вибрации"
+            android:summary="Использовать режим вибрации"
+            android:defaultValue="false"
+            android:dependency="keyAlarmNotifyEnable"/>
+        <CheckBoxPreference
+            android:key="keyAlarmLoop"
+            android:title="Бесконечное проигрывание"
+            android:summary="Бесконечное проигрывание"
+            android:defaultValue="false"
+            android:dependency="keyAlarmNotifyEnable"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="cat_ServiceNotify"
+        android:summary="Параметры оповещения при сервисных сообщениях"
+        android:title="Параметры оповещения при сервисных сообщениях">
+        <CheckBoxPreference
+            android:key="keyServiceNotifyEnable"
+            android:title="Использовать оповещения (не доступно в режиме SMS для Android 4.4 и выше)"
+            android:summary="Использовать оповещения (не доступно в режиме SMS для Android 4.4 и выше)"
+            android:defaultValue="false" />
+        <RingtonePreference
+            android:key="keyServiceRingtone"
+            android:title="setting_ringtone"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Устанавливает мелодию для звонка (вкл. или выкл.)"
+            android:dependency="keyServiceNotifyEnable"/>
+        <CheckBoxPreference
+            android:key="keyServiceVibro"
+            android:title="Использовать режим вибрации"
+            android:summary="Использовать режим вибрации"
+            android:defaultValue="false"
+            android:dependency="keyServiceNotifyEnable"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="cat_alarms"
+        android:summary="Расшифровка и описание тревог"
+        android:title="Расшифровка и описание тревог">
+        <EditTextPreference
+            android:key="pref_in1"
+            android:title="Вход 1"
+            android:summary="Введите название тревоги по входу 1"
+            android:defaultValue="Сработка буксировачного датчика с переди"
+            android:dialogTitle="Введите название тревоги по входу 1" />
+        <EditTextPreference
+            android:key="pref_in2"
+            android:title="Вход 2"
+            android:summary="Введите название тревоги по входу 1"
+            android:defaultValue="Датчик дыма, салон автомобиля"
+            android:dialogTitle="Введите название тревоги по входу 2" />
+    </PreferenceCategory>
+
+    <CheckBoxPreference
+        android:key="key_exit"
+        android:title="Закрытие приложение двойным кликом"
+        android:summary="Закрытие приложение двойным кликом"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:key="style"
+        android:title="Стиль для шрифта"
+        android:summary="Устанавливает стиль для шрифта"
+        android:defaultValue="1"
+        android:entries="@array/text_style"
+        android:entryValues="@array/text_style"
+        android:dialogTitle="Выберите стиль для шрифта" />
+    <EditTextPreference
+        android:key="pref_size"
+        android:title="Размер шрифта"
+        android:summary="Устанавливает новый размер шрифта"
+        android:defaultValue="14"
+        android:dialogTitle="Введите размер шрифта (от 10 до 32)" />
+
+
+</PreferenceScreen>

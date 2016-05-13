@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="cat_device"
+        android:summary="Настройки объектового контроллера"
+        android:title="ИСТОК-АВТО GPS">
+        <EditTextPreference
+            android:key="pref_phone"
+            android:title="Номер телефона оборудования"
+            android:summary="Введите номер телефоны SIM-карты, установленной в приборе"
+            android:defaultValue=""
+            android:inputType="phone"
+            android:dialogTitle="Введите номер телефона в формате (+79171234567)" />
+        <EditTextPreference
+            android:key="pref_name"
+            android:title="Имя объекта"
+            android:summary="Введите имя объекта"
+            android:defaultValue="Объект 1"
+            android:dialogTitle="Введите имя объекта" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="cat_server"
+        android:summary="Параметры подключения к серверу"
+        android:title="Параметры подключения к серверу">
+        <CheckBoxPreference
+            android:key="key_enable"
+            android:title="Использовать подключение к серверу"
+            android:summary="Для GPRS On-line мониторинга"
+            android:defaultValue="false" />
+        <EditTextPreference
+            android:key="pref_ip"
+            android:title="IP-адрес"
+            android:summary="IP-адрес"
+            android:defaultValue="000.000.000.000"
+            android:dialogTitle="Введите IP-адрес сервера в формате (000.000.000.000)"
+            android:dependency="key_enable"/>
+        <EditTextPreference
+            android:key="pref_port"
+            android:title="Порт"
+            android:summary="Введите номер порта"
+            android:numeric="integer"
+            android:inputType="numberDecimal"
+            android:maxEms="65535"
+            android:defaultValue="1234"
+            android:dialogTitle="Введите номер порта (от 0 до 65535)"
+            android:dependency="key_enable"/>
+        <EditTextPreference
+            android:key="pref_username"
+            android:title="Имя пользователя"
+            android:summary="Имя пользователя"
+            android:defaultValue="username"
+            android:dialogTitle="Введите имя имя пользователя"
+            android:dependency="key_enable"/>
+        <EditTextPreference
+            android:key="pref_pass"
+            android:title="Пароль"
+            android:summary="Введите пароль"
+            android:password="true"
+            android:defaultValue="password"
+            android:dialogTitle="Введите пароль"
+            android:dependency="key_enable"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+    android:key="cat_AlarmNotify"
+    android:summary="Параметры оповещения при тревоге"
+    android:title="Тревожные сообщения">
+    <CheckBoxPreference
+        android:key="keyAlarmNotifyEnable"
+        android:title="Использовать оповещения"
+        android:summary="Звуковое оповещение при тревоге"
+        android:defaultValue="false" />
+    <RingtonePreference
+        android:key="keyAlarmRingtone"
+        android:title="setting_ringtone"
+        android:showDefault="true"
+        android:showSilent="true"
+        android:summary="Выбор мелодии"
+        android:dependency="keyAlarmNotifyEnable"/>
+    <CheckBoxPreference
+        android:key="keyAlarmVibro"
+        android:title="Разрешить вибрацию"
+        android:summary="Использовать режим вибрации при оповещении"
+        android:defaultValue="false"
+        android:dependency="keyAlarmNotifyEnable"/>
+    <CheckBoxPreference
+        android:key="keyAlarmLoop"
+        android:title="Бесконечное проигрывание"
+        android:summary="Мелодия проигрывается до тех пор, пока не будут предприняты действия"
+        android:defaultValue="false"
+        android:dependency="keyAlarmNotifyEnable"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="cat_ServiceNotify"
+        android:summary="Параметры оповещения при сервисных сообщениях"
+        android:title="Включение, взятие/снятие с охраны, опрос состояния">
+        <CheckBoxPreference
+            android:key="keyServiceNotifyEnable"
+            android:title="Использовать оповещения"
+            android:summary="Сервисные сообщения"
+            android:defaultValue="false" />
+        <RingtonePreference
+            android:key="keyServiceRingtone"
+            android:title="setting_ringtone"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Выбор мелодии"
+            android:dependency="keyServiceNotifyEnable"/>
+        <CheckBoxPreference
+            android:key="keyServiceVibro"
+            android:title="Разрешить вибрацию"
+            android:summary="Использовать режим вибрации при оповещении"
+            android:defaultValue="false"
+            android:dependency="keyServiceNotifyEnable"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="cat_alarms"
+        android:summary="Расшифровка и описание тревог"
+        android:title="Расшифровка и описание тревог">
+        <EditTextPreference
+            android:key="pref_in1"
+            android:title="Вход 1"
+            android:summary="Введите название тревоги по входу 1"
+            android:defaultValue="Тревога. Вход IN1"
+            android:dialogTitle="Введите название тревоги по входу 1" />
+        <EditTextPreference
+            android:key="pref_in2"
+            android:title="Вход 2"
+            android:summary="Введите название тревоги по входу 1"
+            android:defaultValue="Тревога. Вход IN2"
+            android:dialogTitle="Введите название тревоги по входу 2" />
+    </PreferenceCategory>
+
+    <CheckBoxPreference
+        android:key="key_exit"
+        android:title="Запрашивать подтверждение при выходе из приложения"
+        android:summary="Закрытие приложение производится двойным кликом"
+        android:defaultValue="true" />
+
+
+
+</PreferenceScreen>

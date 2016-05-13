@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="100"
+        android:title="@string/about_menu"
+        android:onClick="onAboutMenuClick"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/settings_menu"
+        android:orderInCategory="100"
+        android:onClick="onSettingsMenuClick"/>
+
+    <item
+        android:id="@+id/action_configurator"
+        android:orderInCategory="100"
+        android:title="@string/configurator_menu"
+        android:onClick="onConfigMenuClick"/>
+
+    <item
+        android:id="@+id/action_cat3"
+        android:orderInCategory="100"
+        android:onClick="onArchieveMenuItemClick"
+        android:title="Архив"/>
+</menu>

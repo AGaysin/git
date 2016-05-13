@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="text_style">
+        <item>Обычный</item>
+        <item>Полужирный</item>
+        <item>Курсив</item>
+        <item>Полужирный+Курсив</item>
+    </string-array>
+
+    <string-array name="screen_array">
+        <item>Screen 1</item>
+        <item>Screen 2</item>
+        <item>Screen 3</item>
+    </string-array>
+
+    <string-array name="config_items_array">
+        <item>Настройки ПЦН</item>
+        <item>Собственники</item>
+        <item>Часовой пояс и баланс SIM</item>
+        <item>Параметры входа IN1</item>
+        <item>Параметры входа IN2</item>
+        <item>Параметры питания</item>
+        <item>Геолокация и GPS</item>
+        <item>Датчик ускорения</item>
+        <item>Jamm-detect</item>
+        <item>Сервисные сообщения</item>
+        <item>Привязка по Bluetooth</item>
+    </string-array>
+
+    <string-array name="timezone">
+        <item>GMT+0 (Гринвич)</item>
+        <item>GMT+1</item>
+        <item>GMT+2 (Москва)</item>
+        <item>GMT+3</item>
+        <item>GMT+4</item>
+        <item>GMT+5 (Уфа, Екатеринбург, Челябинск)</item>
+        <item>GMT+6</item>
+        <item>GMT+7</item>
+        <item>GMT+8</item>
+        <item>GMT+9</item>
+        <item>GMT+10</item>
+        <item>GMT+11</item>
+        <item>GMT+12</item>
+        <item>GMT+13</item>
+        <item>GMT+14</item>
+        <item>GMT+15</item>
+        <item>GMT+16</item>
+    </string-array>
+
+    <string-array name="cash_interval">
+        <item>не используется</item>
+        <item>1ч</item>
+        <item>2ч</item>
+        <item>4ч</item>
+        <item>8ч</item>
+        <item>12ч</item>
+        <item>24ч</item>
+    </string-array>
+    <string-array name="ugon_distance">
+        <item>не используется</item>
+        <item>10 метров</item>
+        <item>20 метров</item>
+        <item>30 метров</item>
+        <item>50 метров</item>
+        <item>100 метров</item>
+        <item>150 метров</item>
+        <item>200 метров</item>
+        <item>300 метров</item>
+        <item>500 метров</item>
+    </string-array>
+
+    <string-array name="pcn_sms_time_array">
+        <item>не оповещать</item>
+        <item>1 ч.</item>
+        <item>2 ч.</item>
+        <item>3 ч.</item>
+        <item>4 ч.</item>
+        <item>5 ч.</item>
+        <item>8 ч.</item>
+        <item>12 ч.</item>
+        <item>16 ч.</item>
+        <item>24 ч.</item>
+        <item>36 ч.</item>
+        <item>2 сут.</item>
+        <item>3 сут.</item>
+        <item>4 сут.</item>
+        <item>5 сут.</item>
+        <item>7 сут.</item>
+        <item>10 сут.</item>
+    </string-array>
+
+    <string-array name="pcn_call_time_array">
+        <item>не оповещать</item>
+        <item>5 мин.</item>
+        <item>10 мин.</item>
+        <item>15 мин.</item>
+        <item>30 мин.</item>
+        <item>45 мин.</item>
+        <item>1 ч.</item>
+        <item>1 ч. 30 мин.</item>
+        <item>2 ч.</item>
+        <item>3 ч.</item>
+        <item>4 ч.</item>
+    </string-array>
+
+    <string-array name="in_types_array">
+        <item>Активен в состоянии "Взят под охрану"</item>
+        <item>Активен всегда</item>
+        <item>Используется для взятия/снятия с охраны</item>
+    </string-array>
+
+    <string-array name="bat_time_array">
+        <item>1 мин.</item>
+        <item>2 мин.</item>
+        <item>3 мин.</item>
+        <item>4 мин.</item>
+        <item>5 мин.</item>
+        <item>6 мин.</item>
+        <item>7 мин.</item>
+        <item>8 мин.</item>
+        <item>9 мин.</item>
+    </string-array>
+
+    <string-array name="acc_time_array">
+        <item>10 сек.</item>
+        <item>15 сек.</item>
+        <item>20 сек.</item>
+        <item>30 сек.</item>
+        <item>45 сек.</item>
+        <item>1 мин.</item>
+        <item>1 мин. 30 с.</item>
+        <item>2 мин.</item>
+        <item>3 мин.</item>
+        <item>4 мин.</item>
+    </string-array>
+
+</resources>
