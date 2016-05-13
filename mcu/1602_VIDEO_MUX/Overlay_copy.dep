@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>611500944</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\main.h</file>
+      <file>$PROJ_DIR$\sfr_defs.h</file>
+      <file>$PROJ_DIR$\StdDefines.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\avr\sfr_defs.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\Overlay_copy.d90</file>
+      <file>$PROJ_DIR$\Debug\Obj\Overlay_copy.pbd</file>
+      <file>$TOOLKIT_DIR$\inc\avr\iom16.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\sleep.h</file>
+      <file>$TOOLKIT_DIR$\inc\inttypes.h</file>
+      <file>$TOOLKIT_DIR$\inc\stdint.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\portpins.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\common.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\version.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\fuse.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\lock.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\signal.h</file>
+      <file>$PROJ_DIR$\StdDefines.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\StdDefines.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\StdDefines.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\avr\io.h</file>
+      <file>$TOOLKIT_DIR$\inc\avr\interrupt.h</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 4</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 23 22 6 11 12 9 13 14 15 16 17 10 18 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 23 22 6 11 12 9 13 14 15 16 17 10 18 3</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\Overlay_copy.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 5</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\StdDefines.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 20</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 21</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 7</file>
+        </tool>
+      </outputs>
+    </file>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>$PROJ_DIR$\main.c</name>
+      <tool>ICCAVR</tool>
+    </forcedrebuild>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

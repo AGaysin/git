@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>984971744</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\Project\Discover\src\main.c</file>
+      <file>$PROJ_DIR$\Project\Discover\src\microsd.c</file>
+      <file>$PROJ_DIR$\Debug\Exe\FWLib.a</file>
+      <file>$PROJ_DIR$\Project\Discover\src\mmc.c</file>
+      <file>$PROJ_DIR$\Project\Discover\src\pff.c</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_tim2.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_gpio.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_tim4.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_itc.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+      <file>$TOOLKIT_DIR$\lib\dbgstm8smd.a</file>
+      <file>$PROJ_DIR$\Debug\Exe\STM8S103_WAV.out</file>
+      <file>$PROJ_DIR$\Project\Discover\src\stm8s_it.c</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_type.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_adc1.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_clk.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_exti.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\stm8s_it.pbi</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_tim1.h</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_iwdg.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlstm8smn.a</file>
+      <file>$PROJ_DIR$\Debug\List\main.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Project\Discover\src\stm8s_it.h</file>
+      <file>$PROJ_DIR$\Project\Discover\inc\stm8s_conf.h</file>
+      <file>$TOOLKIT_DIR$\config\lnkstm8s103f2.icf</file>
+      <file>$PROJ_DIR$\Debug\Exe\STM8S103F3P6_RFID_V10.hex</file>
+      <file>$PROJ_DIR$\Debug\Exe\STM8S103F2P_RFID.out</file>
+      <file>$PROJ_DIR$\Debug\List\STM8S103F2P_RFID.map</file>
+      <file>$PROJ_DIR$\Debug\Exe\STM8S103F2P_RFID_V12.hex</file>
+      <file>$PROJ_DIR$\Debug\Obj\stm8_interrupt_vector.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\STM8S103_WAV.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\asmfunc.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\xitoa.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\microsd.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\microsd.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\adpcm.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\adpcm.o</file>
+      <file>$PROJ_DIR$\Project\Discover\src\diskio.h</file>
+      <file>$PROJ_DIR$\Project\Discover\src\integer.h</file>
+      <file>$PROJ_DIR$\Project\Discover\src\pff.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlstm8smn.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$PROJ_DIR$\Project\Discover\inc\adpcm.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\pff.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\pff.pbi</file>
+      <file>$PROJ_DIR$\Project\Discover\inc\microsd.h</file>
+      <file>$PROJ_DIR$\Debug\List\adpcm.lst</file>
+      <file>$PROJ_DIR$\Debug\List\stm8_interrupt_vector.lst</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\inc\stm8s_spi.h</file>
+      <file>$PROJ_DIR$\Debug\List\stm8s_it.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\mmc.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\mmc.pbi</file>
+      <file>$PROJ_DIR$\Libraries\STM8S_StdPeriph_Driver\src\stm8s_gpio.c</file>
+      <file>$PROJ_DIR$\Project\Discover\src\asmfunc.S</file>
+      <file>$PROJ_DIR$\Project\Discover\src\xitoa.S</file>
+      <file>$PROJ_DIR$\Project\Discover\src\stm8_interrupt_vector.c</file>
+      <file>$PROJ_DIR$\Project\Discover\src\adpcm.c</file>
+      <file>$PROJ_DIR$\Debug\List\diskio.lst</file>
+      <file>$PROJ_DIR$\Debug\List\STM8S103F3P_RFID.map</file>
+      <file>$PROJ_DIR$\Debug\Exe\STM8S103F3P_RFID.out</file>
+      <file>$PROJ_DIR$\Project\Discover\src\asmfunct.asm</file>
+      <file>$PROJ_DIR$\Debug\List\asmfunct.lst</file>
+      <file>$PROJ_DIR$\Debug\List\avr32wav.lst</file>
+      <file>$PROJ_DIR$\..\..\&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x44B;\sd8psrc\integer.h</file>
+      <file>$PROJ_DIR$\..\..\&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x44B;\sd8psrc\main.c</file>
+      <file>$PROJ_DIR$\..\..\&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x44B;\sd8psrc\pff.h</file>
+      <file>$PROJ_DIR$\..\..\&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x44B;\sd8psrc\xitoa.h</file>
+      <file>$PROJ_DIR$\..\..\&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x44B;\sd8psrc\mmc.c</file>
+      <file>$PROJ_DIR$\..\..\&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x44B;\sd8psrc\diskio.h</file>
+      <file>$TOOLKIT_DIR$\config\lnkstm8s103f3.icf</file>
+      <file>$PROJ_DIR$\Debug\Obj\diskio.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\diskio.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\asmfunct.o</file>
+      <file>$PROJ_DIR$\Project\Discover\src\diskio.c</file>
+      <file>$PROJ_DIR$\Project\Discover\src\pffconf.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\avr32wav.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\avr32wav.o</file>
+      <file>$PROJ_DIR$\Project\Discover\src\avr32wav.c</file>
+      <file>$PROJ_DIR$\Project\Discover\src\avr32wav.h</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 69 68</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\main.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 24</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15 13 26 16 6 21 19 5 14 8 7 17 58 20 40 41 42 84 45 44 49 43 50 51 46 47 48</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\microsd.c</name>
+      <outputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 37</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 55 15 13 26 16 6 21 58</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\mmc.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 40 41 15 13 26 16 6 21 58</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\pff.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 54</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42 41 84 40</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\STM8S103_WAV.out</name>
+      <outputs>
+        <tool>
+          <name>OBJCOPY</name>
+          <file> 28</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 27 2 9 22 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\stm8s_it.c</name>
+      <outputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 59</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 18</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 52 15 13 26 16 6 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 52 15 13 26 16 6 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\STM8S103F2P_RFID.out</name>
+      <outputs>
+        <tool>
+          <name>OBJCOPY</name>
+          <file> 31</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 79 2 9 60 53 22 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\asmfunc.S</name>
+      <outputs>
+        <tool>
+          <name>ASTM8</name>
+          <file> 34</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\xitoa.S</name>
+      <outputs>
+        <tool>
+          <name>ASTM8</name>
+          <file> 35</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\stm8_interrupt_vector.c</name>
+      <outputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 57</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 32</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 25 15 13 26 16 6 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 25 15 13 26 16 6 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\adpcm.c</name>
+      <outputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 56 39</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 38</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 52 15 13 26 16 6 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 52 15 13 26 16 6 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\STM8S103F3P_RFID.out</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 68</file>
+        </tool>
+        <tool>
+          <name>OBJCOPY</name>
+          <file> 31</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 79 2 86 9 60 53 22 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\asmfunct.asm</name>
+      <outputs>
+        <tool>
+          <name>ASTM8</name>
+          <file> 82 71</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\diskio.c</name>
+      <outputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 67 81</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 80</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 40 41 0 15 13 26 16 6 21 19 5 14 8 7 17 58 20 55 42 84 45 44 49 43 50 51 46 47 48 4</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 40 41</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Project\Discover\src\avr32wav.c</name>
+      <outputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 72 86 9 60 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 85</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCSTM8</name>
+          <file> 88 40 41 45 44 49 43 50 51 46 47 48 0 15 13 26 16 6 21 19 5 14 8 7 17 58 20 42 84 3 4</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 88 40 41 45 44 49 43 50 51 46 47 48</file>
+        </tool>
+      </inputs>
+    </file>
+    <forcedrebuild>
+      <name>$PROJ_DIR$\Project\Discover\src\mmc.c</name>
+      <tool>ICCSTM8</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>$PROJ_DIR$\Project\Discover\src\pff.c</name>
+      <tool>ICCSTM8</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

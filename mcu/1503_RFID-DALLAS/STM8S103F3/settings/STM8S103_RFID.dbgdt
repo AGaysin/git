@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log>
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1381</ColumnWidth1></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1035</ColumnWidth1><ColumnWidth2>276</ColumnWidth2><ColumnWidth3>69</ColumnWidth3></Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>264</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        <col-names>
+          
+          
+        <item>Disassembly</item><item>_I0</item></col-names>
+        <col-widths>
+          
+          
+        <item>500</item><item>20</item></col-widths>
+        <DisasmHistory/>
+        
+        
+      <ShowCodeCoverage>1</ShowCodeCoverage><ShowInstrProfiling>1</ShowInstrProfiling></Disassembly>
+      <Register/>
+    <WATCH_1><expressions><item>ucDataReceiveBuffer</item><item>ucOldKeyCode</item><item>ucDataReceiveBuffer</item><item>TestTest</item><item>ucCnt</item><item>ucTestMaxStartCounter</item><item/></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>123</item><item>150</item><item>100</item><item>166</item></col-widths></WATCH_1><Select-Ambiguous-Definitions><ColumnWidth0>496</ColumnWidth0><ColumnWidth1>70</ColumnWidth1><ColumnWidth2>850</ColumnWidth2></Select-Ambiguous-Definitions><Locals><col-names><item>Location</item><item>Type</item><item>Value</item><item>Variable</item></col-names><col-widths><item>150</item><item>100</item><item>100</item><item>348</item></col-widths></Locals></Static>
+    <Windows>
+      
+      
+      
+    <Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-18375-27394</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-17853-27404</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-18208-28011</Identity>
+            <TabName>Register</TabName>
+            <Factory>Register</Factory>
+            <Session>
+              
+              
+              
+              
+            <State8>TIM4_SR</State8><REG1>0</REG1><REG2>0</REG2><Group>14</Group><States>8</States><State0>EXTI_CR2</State0><State1>PC_CR2</State1><State2>PC_IDR</State2><State3>RST_SR</State3><State4>TIM4_CR1</State4><State5>TIM4_EGR</State5><State6>TIM4_IER</State6><State7>TIM4_SR</State7></Session>
+          </Tab>
+        <Tab><Identity>TabID-20317-9610</Identity><TabName>Watch 1</TabName><Factory>WATCH_1</Factory></Tab><Tab><Identity>TabID-31676-5995</Identity><TabName>Ambiguous Definitions</TabName><Factory>Select-Ambiguous-Definitions</Factory><Session/></Tab><Tab><Identity>TabID-21149-26457</Identity><TabName>Locals</TabName><Factory>Locals</Factory></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-29124-27398</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>&lt;ws&gt;</ExpandedNode><ExpandedNode>&lt;ws&gt;/FWLib</ExpandedNode><ExpandedNode>&lt;ws&gt;/STM8S103_RFID</ExpandedNode><ExpandedNode>&lt;ws&gt;/STM8S103_RFID/main.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-7104-27401</Identity>
+            <TabName>Disassembly</TabName>
+            <Factory>Disassembly</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd5></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-004548c8><key>iaridepm.enu1</key></Toolbar-004548c8></Sizes></Row0><Row1><Sizes><Toolbar-004cb398><key>debuggergui.enu1</key></Toolbar-004cb398></Sizes></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>707</Bottom><Right>355</Right><x>-2</x><y>-2</y><xscreen>290</xscreen><yscreen>245</yscreen><sizeHorzCX>226563</sizeHorzCX><sizeHorzCY>249491</sizeHorzCY><sizeVertCX>278906</sizeVertCX><sizeVertCY>721996</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>707</Bottom><Right>266</Right><x>-2</x><y>-2</y><xscreen>290</xscreen><yscreen>245</yscreen><sizeHorzCX>226563</sizeHorzCX><sizeHorzCY>249491</sizeHorzCY><sizeVertCX>209375</sizeVertCX><sizeVertCY>721996</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>206</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>208</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>211813</sizeHorzCY><sizeVertCX>226563</sizeVertCX><sizeVertCY>249491</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

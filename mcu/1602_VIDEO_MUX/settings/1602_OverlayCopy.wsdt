@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>Overlay_copy/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>124</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1395</ColumnWidth1><ColumnWidth2>372</ColumnWidth2><ColumnWidth3>93</ColumnWidth3></Build>
+    </Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-1363-23181</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>Overlay_copy</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-1511-9615</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\avr\doc\infocenter\index.ENU.html</Filename></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\main.c</Filename><XPos>0</XPos><YPos>131</YPos><SelStart>7599</SelStart><SelEnd>7647</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\video.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1533</SelStart><SelEnd>1533</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\video.h</Filename><XPos>0</XPos><YPos>87</YPos><SelStart>1727</SelStart><SelEnd>1727</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\video_render.c</Filename><XPos>0</XPos><YPos>213</YPos><SelStart>2075</SelStart><SelEnd>2075</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\video_sync.c</Filename><XPos>0</XPos><YPos>69</YPos><SelStart>1619</SelStart><SelEnd>1619</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\fontbank0.c</Filename><XPos>0</XPos><YPos>111</YPos><SelStart>1754</SelStart><SelEnd>1754</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\fontbank1.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1812</SelStart><SelEnd>1812</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\fontbank10.c</Filename><XPos>0</XPos><YPos>87</YPos><SelStart>2065</SelStart><SelEnd>2065</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\example\font.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1320</SelStart><SelEnd>1320</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Overlay\Main.c</Filename><XPos>0</XPos><YPos>69</YPos><SelStart>0</SelStart><SelEnd>12269</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>14</YPos><SelStart>6584</SelStart><SelEnd>6584</SelEnd></Tab><ActiveTab>11</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Overlay\StdDefines.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>1103</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\StdDefines.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1103</SelStart><SelEnd>1103</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\interrupt.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1129</SelStart><SelEnd>1129</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\avr\inc\avr\io.h</Filename><XPos>0</XPos><YPos>283</YPos><SelStart>9903</SelStart><SelEnd>9919</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\avr\inc\avr\iom16.h</Filename><XPos>0</XPos><YPos>460</YPos><SelStart>9966</SelStart><SelEnd>9975</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\avr\inc\stdint.h</Filename><XPos>0</XPos><YPos>103</YPos><SelStart>3705</SelStart><SelEnd>3705</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>639</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00fb5280><key>iaridepm.enu1</key></Toolbar-00fb5280></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>755</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>758517</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200401</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
