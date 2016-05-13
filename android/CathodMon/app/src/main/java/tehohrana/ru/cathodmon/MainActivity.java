@@ -154,18 +154,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        String id = String.valueOf(acmi.position);
         switch (item.getItemId())
         {
             case CM_ADD_ID:
                 Intent intent = new Intent(this, AddActivity.class);
+                intent.putExtra("isEdit",false);
+                intent.putExtra("dbId",0);
+                intent.putExtra("dbPosition",0);
                 startActivity(intent);
                 break;
             case CM_DELETE_ID:
                 // получаем инфу о пункте списка
 
-                AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-                String id = String.valueOf(acmi.position);
 
 
                 try{
@@ -199,7 +203,14 @@ public class MainActivity extends AppCompatActivity
                 //adapter.notifyDataSetChanged();
                 return true;
             case CM_EDIT_ID:
-                Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
+
+
+
+                Intent intent2 = new Intent(this, AddActivity.class);
+                intent2.putExtra("isEdit",true);
+                intent2.putExtra("dbId",id);
+                intent2.putExtra("dbPosition",acmi.position);
+                startActivity(intent2);
                 break;
         }
 
@@ -254,6 +265,9 @@ public class MainActivity extends AppCompatActivity
 
     public void onBtnFabAddClick(View view) {
         Intent intent = new Intent(this, AddActivity.class);
+        intent.putExtra("isEdit",false);
+        intent.putExtra("dbId",0);
+        intent.putExtra("dbPosition",0);
         startActivity(intent);
     }
 
