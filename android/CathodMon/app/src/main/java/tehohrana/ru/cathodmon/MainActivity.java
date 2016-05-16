@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        updateListView();
+        //updateListView();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onResume(){
+        updateListView();
         super.onResume();
         // put your code here...
         //Read database for Cathodes
@@ -157,12 +158,14 @@ public class MainActivity extends AppCompatActivity
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         String id = String.valueOf(acmi.position);
+
+
+
         switch (item.getItemId())
         {
             case CM_ADD_ID:
                 Intent intent = new Intent(this, AddActivity.class);
                 intent.putExtra("isEdit",false);
-                intent.putExtra("dbId",0);
                 intent.putExtra("dbPosition",0);
                 startActivity(intent);
                 break;
@@ -208,7 +211,6 @@ public class MainActivity extends AppCompatActivity
 
                 Intent intent2 = new Intent(this, AddActivity.class);
                 intent2.putExtra("isEdit",true);
-                intent2.putExtra("dbId",id);
                 intent2.putExtra("dbPosition",acmi.position);
                 startActivity(intent2);
                 break;
@@ -266,7 +268,6 @@ public class MainActivity extends AppCompatActivity
     public void onBtnFabAddClick(View view) {
         Intent intent = new Intent(this, AddActivity.class);
         intent.putExtra("isEdit",false);
-        intent.putExtra("dbId",0);
         intent.putExtra("dbPosition",0);
         startActivity(intent);
     }

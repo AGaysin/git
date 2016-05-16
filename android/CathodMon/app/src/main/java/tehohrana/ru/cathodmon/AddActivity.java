@@ -163,7 +163,6 @@ public class AddActivity extends Activity {
 
         Intent intent = getIntent();
         isEdit = intent.getBooleanExtra("isEdit", false);
-        dbId = intent.getIntExtra("dbId", 0);
         int dbPosition = intent.getIntExtra("dbPosition", 0);
 
 
@@ -178,9 +177,8 @@ public class AddActivity extends Activity {
 
             if (cursor.moveToPosition(dbPosition))
             {
-                int maxCount = cursor.getCount();
-                cursor.moveToFirst();
 
+                dbId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
                 mEditTextAddText.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TEXT_COLUMN)));
                 mEditTextAddPhone.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.PHONE_COLUMN)));
 
@@ -188,12 +186,13 @@ public class AddActivity extends Activity {
 
                 if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.SIGNAL_COOLUMN))==0)
                 {
-                    mRadioButtonAdd420mA.setChecked(false);
-                    mRadioButtonAdd05V.setChecked(true);
-                }
-                else {
                     mRadioButtonAdd05V.setChecked(false);
                     mRadioButtonAdd420mA.setChecked(true);
+                }
+                else {
+                    mRadioButtonAdd420mA.setChecked(false);
+                    mRadioButtonAdd05V.setChecked(true);
+
                 }
 
 
@@ -270,7 +269,8 @@ public class AddActivity extends Activity {
         values.put(DatabaseHelper.CNT_SCALE_COLUMN, mEditTextAddCntScale.getText().toString());
         if (isEdit)
         {
-            mSqLiteDatabase.update("Cathodes",values,"id ='" + dbId + "'",null);
+            mSqLiteDatabase.update("Cathodes", values, "_id = ?",
+                    new String[] {Integer.toString(dbId)});
 
         }
         else {
