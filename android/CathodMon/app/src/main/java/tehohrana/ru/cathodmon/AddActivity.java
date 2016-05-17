@@ -213,7 +213,7 @@ public class AddActivity extends Activity {
             mTextViewAddPhoneOk.setText("Ok");
             mTextViewAddTextOk.setText("Ok");
             mButtonAddApply.setEnabled(true);
-            mButtonAddApply.setText("Изменить");
+            mButtonAddApply.setText("Сохранить");
         }
         else
         {
