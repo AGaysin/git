@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,11 +60,19 @@ public class CathodeActivity extends Activity {
     TextView mTextViewCathodePhone;
     TextView mTextViewCathodeType, mTextViewCathodeTitle;
     public String mDevicePhoneNumber;
-    TextView mTextViewCathodeTc;
+
+    TextView    mTextViewValDateTime, mTextViewValU, mTextViewValI, mTextViewValP,
+        mTextViewValDoor, mTextViewValTc, mTextViewValSvn1, mTextViewValSvn2, mTextViewValCnt,
+        mTextViewVal220V, mTextViewValHeater, mTextViewValStabRs, mTextViewValStabUniver, mTextViewValtemp;
+
+    ImageView mImageViewAlarm1,mImageViewAlarm2,mImageViewAlarm3,mImageViewAlarm4,
+            mImageViewAlarm5,mImageViewAlarm6,mImageViewAlarm7;
+    Button mButtonValStabParam;
 
     LinearLayout mLinearLayoutUseti, mLinearLayoutCathodeStabRs, mLinearLayoutCathodeStabUnivers,
     mLinearLayoutCathodeAlarms;
-
+    int dbId;
+    int dbDeviceType;
 
     private static long timerSmsCommandWaiting;
     private Handler handler = new Handler();
@@ -84,14 +93,13 @@ public class CathodeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cathode);
         int dbPosition = getIntent().getIntExtra("db_cathode_position", 0);
-        int dbId=0;
-        int dbDeviceType=0;
+        dbId=0;
+        dbDeviceType=0;
 
         mTextViewCathodeText = (TextView)findViewById(R.id.textViewCathodeTextVal);
         mTextViewCathodePhone = (TextView) findViewById(R.id.textViewCathodePhoneVal);
         mTextViewCathodeType = (TextView)findViewById(R.id.textViewCathodeDeviceType);
         mTextViewCathodeTitle = (TextView) findViewById(R.id.textViewCathodeTitle);
-        mTextViewCathodeTc = (TextView)findViewById(R.id.textViewCathodeTc);
 
         mLinearLayoutUseti = (LinearLayout) findViewById(R.id.linearLayoutUseti);
         mLinearLayoutCathodeStabRs = (LinearLayout) findViewById(R.id.linearLayoutCathodeStabRs);
@@ -100,11 +108,36 @@ public class CathodeActivity extends Activity {
 
 
 
+        mTextViewValDateTime = (TextView)findViewById(R.id.textViewCathodeDateTime);
+        mTextViewValU = (TextView)findViewById(R.id.textViewCathodeUval);
+        mTextViewValI = (TextView)findViewById(R.id.textViewCathodeIval);
+        mTextViewValP = (TextView)findViewById(R.id.textViewCathodeFival);
+        mTextViewValDoor = (TextView)findViewById(R.id.textViewCathodeDoor);
+        mTextViewValTc = (TextView)findViewById(R.id.textViewCathodeTc);
+        mTextViewValSvn1 = (TextView)findViewById(R.id.textViewCathodeSvn1Val);
+        mTextViewValSvn2 = (TextView)findViewById(R.id.textViewCathodeSvn2Val);
+        mTextViewValCnt = (TextView)findViewById(R.id.textViewCathodeElCntVal);
+        mTextViewVal220V = (TextView)findViewById(R.id.textViewCathodeUsetiVal);
+        mTextViewValtemp = (TextView)findViewById(R.id.textViewCathodeTempVal);
+        mTextViewValHeater = (TextView)findViewById(R.id.textViewCathodeHeater);
+        mTextViewValStabRs = (TextView)findViewById(R.id.textViewCathodeStabRsVal);
+        mTextViewValStabUniver = (TextView)findViewById(R.id.textViewCathodeStabUniverVal);
 
-        DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, "CathodMon2.db", null, 1);
+        mImageViewAlarm1 = (ImageView)findViewById(R.id.imageViewCathodeAlarm1);
+        mImageViewAlarm2 = (ImageView)findViewById(R.id.imageViewCathodeAlarm2);
+        mImageViewAlarm3 = (ImageView)findViewById(R.id.imageViewCathodeAlarm3);
+        mImageViewAlarm4 = (ImageView)findViewById(R.id.imageViewCathodeAlarm4);
+        mImageViewAlarm5 = (ImageView)findViewById(R.id.imageViewCathodeAlarm5);
+        mImageViewAlarm6 = (ImageView)findViewById(R.id.imageViewCathodeAlarm6);
+        mImageViewAlarm7 = (ImageView)findViewById(R.id.imageViewCathodeAlarm7);
+
+        mButtonValStabParam = (Button)findViewById(R.id.buttonCathodeStabRsSet);
+
+
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, 1);
         SQLiteDatabase cdb = mDatabaseHelper.getReadableDatabase();
 
-        Cursor cursor = cdb.query("Cathodes", null, null, null, null, null, null) ;
+        Cursor cursor = cdb.query(DatabaseHelper.DATABASE_TABLE_CATHODES, null, null, null, null, null, null) ;
 
         if (cursor.moveToPosition(dbPosition))
         {
@@ -113,7 +146,7 @@ public class CathodeActivity extends Activity {
             mDevicePhoneNumber = cursor.getString(cursor.getColumnIndex(DatabaseHelper.PHONE_COLUMN));
             mTextViewCathodeTitle.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TEXT_COLUMN)));
             mTextViewCathodePhone.setText(mDevicePhoneNumber);
-
+            mTextViewCathodeText.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.INFO_COLUMN)));
             dbDeviceType = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.DEVICE_COLUMN));
 
             if (dbDeviceType==0)
@@ -122,7 +155,7 @@ public class CathodeActivity extends Activity {
                 if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.SIGNAL_COOLUMN))==0)
                     mTextViewCathodeType.setText("Универсальный (4-20 мА)");
                 else mTextViewCathodeType.setText("Универсальный (0-5 В)");
-                mTextViewCathodeTc.setVisibility(View.VISIBLE);
+                mTextViewValTc.setVisibility(View.VISIBLE);
                 mLinearLayoutUseti.setVisibility(View.GONE);
                 mLinearLayoutCathodeAlarms.setVisibility(View.GONE);
                 mLinearLayoutCathodeStabRs.setVisibility(View.GONE);
@@ -133,7 +166,7 @@ public class CathodeActivity extends Activity {
             {
                 //Интерфейсный
                 mTextViewCathodeType.setText("Интерфейсный (RS-485)");
-                mTextViewCathodeTc.setVisibility(View.GONE);
+                mTextViewValTc.setVisibility(View.GONE);
                 mLinearLayoutUseti.setVisibility(View.VISIBLE);
                 mLinearLayoutCathodeAlarms.setVisibility(View.VISIBLE);
                 mLinearLayoutCathodeStabRs.setVisibility(View.VISIBLE);
@@ -142,6 +175,111 @@ public class CathodeActivity extends Activity {
 
 
 
+            //Последние показания станции
+            mTextViewValDateTime.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_DATETIME_COLUMN)));
+            mTextViewValU.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN )));
+            mTextViewValI.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN )));
+            mTextViewValP.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN )));
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_DOOR_COLUMN  ))==0)
+            {
+                //дверь закрыта
+                mTextViewValDoor.setText("ДВЕРЬ ЗАКРЫТА");
+                mTextViewValDoor.setTextColor(getResources().getColor(R.color.green));
+            }
+            else
+            {
+                //Дверь открыта
+                mTextViewValDoor.setText("ДВЕРЬ ОТКРЫТА");
+                mTextViewValDoor.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_TC_COLUMN))==0)
+            {
+                //TC-резерв = 0
+                mTextViewValTc.setText("TC-резерв = 0 (замкнут)");
+                mTextViewValTc.setTextColor(getResources().getColor(R.color.green));
+            }
+            else
+            {
+                //TC-резерв = 1
+                mTextViewValTc.setText("TC-резерв = 1 (разомкнут)");
+                mTextViewValTc.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            mTextViewValSvn1.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_SVN1_COLUMN))));
+            mTextViewValSvn2.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_SVN2_COLUMN))));
+            mTextViewValCnt.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN))));
+            mTextViewVal220V.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_220_COLUMN))));
+            mTextViewValtemp.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_TEMP_COLUMN))));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_HEATER_COLUMN ))==0)
+            {
+                //ТЕРМОСТАТ ОТКЛЮЧЕН
+                mTextViewValHeater.setText("ТЕРМОСТАТ ОТКЛЮЧЕН");
+                mTextViewValHeater.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else
+            {
+                //ТЕРМОСТАТ ВКЛЮЧЕН
+                mTextViewValHeater.setText("ТЕРМОСТАТ ВКЛЮЧЕН");
+                mTextViewValHeater.setTextColor(getResources().getColor(R.color.red));
+            }
+
+
+
+
+            mTextViewValStabRs.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN )));
+            mTextViewValStabUniver.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN )));
+
+            switch (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_PARAM_COLUMN)))
+            {
+                case 1: mButtonValStabParam.setText("Напряжение, В (Изменить)"); break;
+                case 2: mButtonValStabParam.setText("Ток, А (Изменить)"); break;
+                case 3: mButtonValStabParam.setText("Потенциал, В (Изменить)"); break;
+                default: mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
+            }
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM1_COLUMN))==0)
+                mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM2_COLUMN))==0)
+                mImageViewAlarm2.setImageBitmap(BitmapFactory.decodeResource(
+                        this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm2.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM3_COLUMN))==0)
+                mImageViewAlarm3.setImageBitmap(BitmapFactory.decodeResource(
+                        this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm3.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM4_COLUMN))==0)
+                mImageViewAlarm4.setImageBitmap(BitmapFactory.decodeResource(
+                        this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm4.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM5_COLUMN))==0)
+                mImageViewAlarm5.setImageBitmap(BitmapFactory.decodeResource(
+                        this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm5.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM6_COLUMN))==0)
+                mImageViewAlarm6.setImageBitmap(BitmapFactory.decodeResource(
+                        this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm6.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
+
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM7_COLUMN))==0)
+                mImageViewAlarm7.setImageBitmap(BitmapFactory.decodeResource(
+                        this.getResources(), R.drawable.led_gray));
+            else mImageViewAlarm7.setImageBitmap(BitmapFactory.decodeResource(
+                    this.getResources(), R.drawable.led_green));
 
 
 
@@ -183,7 +321,7 @@ public class CathodeActivity extends Activity {
     }
 
     public void onBtnCathodeAskSmsClick(View view) {
-        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(this);
+        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(CathodeActivity.this);
         sendSmsIdGetDialog.setTitle("Будет отправлена SMS-команда! Вы уверены?");
 
         sendSmsIdGetDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
@@ -191,13 +329,12 @@ public class CathodeActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 mLastMessageId = getLastMessageId();
                 sendSMS(mDevicePhoneNumber, "&SET?");
-//                prog1 = new ProgressDialog(getBaseContext());
-//                prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                prog1.setMessage("Ожидание запроса конфигурации оборудования...");
-//                prog1.setIndeterminate(true); // выдать значек ожидания
-//                prog1.setCancelable(false);
-//                timerSmsCommandWaiting = 60;
-//                prog1.show();
+                prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                prog1.setMessage("Ожидание запроса конфигурации оборудования...");
+                prog1.setIndeterminate(true); // выдать значек ожидания
+                prog1.setCancelable(false);
+                timerSmsCommandWaiting = 90;
+                prog1.show();
             }
         });
 
@@ -213,30 +350,31 @@ public class CathodeActivity extends Activity {
 
 
     public void checkNewSms(){
-        if (readSmsParameters(mLastMessageId))
-        {
-            prog1.dismiss();
-            //Вывсти сообщение, что параметры успешно обновлены
-            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-            isSettingsRead = true;
 
-
-            //showParameters();
-            builder.setTitle("Получено новое состояние станции")
-                    .setMessage("Данные успешно обновлены и загружены")
-                    .setIcon(R.drawable.ic_action_error)
-                    .setCancelable(false)
-                    .setNegativeButton("ОК",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            timerSmsCommandWaiting = 0;
-            AlertDialog alert = builder.create();
-            alert.show();
-
-        }
+//        if (readSmsParameters(mLastMessageId))
+//        {
+//            prog1.dismiss();
+//            //Вывсти сообщение, что параметры успешно обновлены
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            isSettingsRead = true;
+//
+//
+//            //showParameters();
+//            builder.setTitle("Получено новое состояние станции")
+//                    .setMessage("Данные успешно обновлены и загружены")
+//                    .setIcon(R.drawable.ic_action_error)
+//                    .setCancelable(false)
+//                    .setNegativeButton("ОК",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    dialog.cancel();
+//                                }
+//                            });
+//            timerSmsCommandWaiting = 0;
+//            AlertDialog alert = builder.create();
+//            alert.show();
+//
+//        }
 
         prog1.setMessage("Ожидание ответа от станции ...(" + timerSmsCommandWaiting + ")");
         //Toast.makeText(getApplicationContext(), "check " + timerSmsCommandWaiting, Toast.LENGTH_SHORT).show();
@@ -246,7 +384,7 @@ public class CathodeActivity extends Activity {
     public void cancelWaiting(){
         prog1.dismiss();
         //Вывести сообщение о таймауте
-        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Время вышло!")
                 .setMessage("Время ожидания SMS-сообщения истекло!")
                 .setIcon(R.drawable.ic_action_error)
@@ -349,7 +487,6 @@ public class CathodeActivity extends Activity {
         }
         return 0;
     }
-
     private void sendSMS(String phoneNumber, String message)    {
         String SENT="SMS_SENT";
         String DELIVERED="SMS_DELIVERED";

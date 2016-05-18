@@ -300,7 +300,7 @@
                                     android:text="-.--"
                                     android:id="@+id/textViewCathodeFival"
                                     android:gravity="center"
-                                    android:textColor="@color/red" />
+                                    android:textColor="@color/gray_time" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -328,8 +328,8 @@
                             android:text="ДВЕРЬ ОТКРЫТА"
                             android:id="@+id/textViewCathodeDoor"
                             android:gravity="center"
-                            android:background="@color/red"
-                            android:layout_margin="5dp" />
+                            android:layout_margin="5dp"
+                            android:textColor="@color/red" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -345,8 +345,8 @@
                             android:text="ТС-резерв = 1 (разомкнут)"
                             android:id="@+id/textViewCathodeTc"
                             android:gravity="center"
-                            android:background="@color/yellow"
-                            android:layout_margin="5dp" />
+                            android:layout_margin="5dp"
+                            android:textColor="@color/yellow" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -533,10 +533,10 @@
                                 android:layout_height="match_parent"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="ТЕРМОСТАТ ВКЛЮЧЕН"
-                                android:id="@+id/textViewCathodeHeaterText"
+                                android:id="@+id/textViewCathodeHeater"
                                 android:gravity="center"
-                                android:background="@color/red"
-                                android:layout_margin="5dp" />
+                                android:layout_margin="5dp"
+                                android:textColor="@color/red" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

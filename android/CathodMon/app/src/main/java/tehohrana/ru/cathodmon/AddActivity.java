@@ -51,6 +51,8 @@ public class AddActivity extends Activity {
     TextView mTextViewAddTextOk;
     TextView mTextViewAddPhoneOk;
 
+    EditText mEditTextAddInfo;
+
     Button mButtonAddApply;
     LinearLayout mLinearLayoutDeviceParamUniversal;
 
@@ -79,6 +81,7 @@ public class AddActivity extends Activity {
         mTextViewAddPhoneOk = (TextView)findViewById(R.id.textViewAddPhoneOk);
         mTextViewAddTextOk = (TextView)findViewById(R.id.textViewAddTextOk);
 
+        mEditTextAddInfo = (EditText)findViewById(R.id.editTextAddInfo);
 
 
         mLinearLayoutDeviceParamUniversal = (LinearLayout)findViewById(R.id.linearLayoutUniversalType);
@@ -100,11 +103,11 @@ public class AddActivity extends Activity {
                 if (s.length()>4)
                 {
                     if (Pattern.matches("[7]([0-9]{10})", mEditTextAddPhone.getText().toString())) mButtonAddApply.setEnabled(true);
-                    mTextViewAddTextOk.setText(" Ok");
+                    mTextViewAddTextOk.setVisibility(View.GONE);
                 }
                 else
                 {
-                    mTextViewAddTextOk.setText("");
+                    mTextViewAddTextOk.setVisibility(View.VISIBLE);
                     mButtonAddApply.setEnabled(false);
                 }
             }
@@ -128,9 +131,9 @@ public class AddActivity extends Activity {
 
                 if (Pattern.matches("[7]([0-9]{10})", s.toString())) {
                     if (mEditTextAddText.getText().length() > 4) mButtonAddApply.setEnabled(true);
-                    mTextViewAddPhoneOk.setText(" Ok");
+                    mTextViewAddPhoneOk.setVisibility(View.GONE);
                 } else {
-                    mTextViewAddPhoneOk.setText("");
+                    mTextViewAddPhoneOk.setVisibility(View.VISIBLE);
                     mButtonAddApply.setEnabled(false);
                 }
             }
@@ -170,10 +173,10 @@ public class AddActivity extends Activity {
         {
             //Чтение данных с базы
 
-            DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, "CathodMon2.db", null, 1);
+            DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, 1);
             SQLiteDatabase cdb = mDatabaseHelper.getReadableDatabase();
 
-            Cursor cursor = cdb.query("Cathodes", null, null, null, null, null, null) ;
+            Cursor cursor = cdb.query(DatabaseHelper.DATABASE_TABLE_CATHODES, null, null, null, null, null, null) ;
 
             if (cursor.moveToPosition(dbPosition))
             {
@@ -195,6 +198,7 @@ public class AddActivity extends Activity {
 
                 }
 
+                mEditTextAddInfo.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.INFO_COLUMN)));
 
                 mEditTextAddImax.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))));
                 mEditTextAddUmax.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))));
@@ -210,15 +214,15 @@ public class AddActivity extends Activity {
             mDatabaseHelper.close();
 
 
-            mTextViewAddPhoneOk.setText("Ok");
-            mTextViewAddTextOk.setText("Ok");
+            mTextViewAddPhoneOk.setVisibility(View.GONE);
+            mTextViewAddTextOk.setVisibility(View.GONE);
             mButtonAddApply.setEnabled(true);
             mButtonAddApply.setText("Сохранить");
         }
         else
         {
-            mTextViewAddPhoneOk.setText("");
-            mTextViewAddTextOk.setText("");
+            mTextViewAddPhoneOk.setVisibility(View.VISIBLE);
+            mTextViewAddTextOk.setVisibility(View.VISIBLE);
             mButtonAddApply.setEnabled(false);
             mButtonAddApply.setText("Добавить");
             mSpinnerAddDeviceType.performClick();
@@ -249,7 +253,7 @@ public class AddActivity extends Activity {
 
     public void onBtnAddToDatabase(View view) {
 
-        mDatabaseHelper = new DatabaseHelper(this, "CathodMon2.db", null, 1);
+        mDatabaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, 1);
 
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
 
@@ -260,6 +264,7 @@ public class AddActivity extends Activity {
 
         values.put(DatabaseHelper.TEXT_COLUMN, mEditTextAddText.getText().toString());
         values.put(DatabaseHelper.PHONE_COLUMN, mEditTextAddPhone.getText().toString());
+        values.put(DatabaseHelper.INFO_COLUMN, mEditTextAddInfo.getText().toString());
         values.put(DatabaseHelper.DEVICE_COLUMN, mSpinnerAddDeviceType.getSelectedItemPosition());
         values.put(DatabaseHelper.SIGNAL_COOLUMN, mRadioButtonAdd05V.isChecked() ? 1:0);
         values.put(DatabaseHelper.IMAX_COLUMN, mEditTextAddImax.getText().toString());
@@ -267,15 +272,64 @@ public class AddActivity extends Activity {
         values.put(DatabaseHelper.FIMAX_COLUMN, mEditTextAddFimax.getText().toString());
         values.put(DatabaseHelper.CNT_BEGIN_COLUMN, mEditTextAddCntBegin.getText().toString());
         values.put(DatabaseHelper.CNT_SCALE_COLUMN, mEditTextAddCntScale.getText().toString());
+
+
         if (isEdit)
         {
-            mSqLiteDatabase.update("Cathodes", values, "_id = ?",
+
+            //Надо ли читать данные?
+//            values.put(DatabaseHelper.VAL_DATETIME_COLUMN, "--.--.--/--:--:--");
+//            values.put(DatabaseHelper.VAL_U_COLUMN, "--.-");
+//            values.put(DatabaseHelper.VAL_I_COLUMN, "--.-");
+//            values.put(DatabaseHelper.VAL_P_COLUMN, "-.--");
+//            values.put(DatabaseHelper.VAL_DOOR_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_TC_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_SVN1_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_SVN2_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_CNT_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_220_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_TEMP_COLUMN, "--");
+//            values.put(DatabaseHelper.VAL_HEATER_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_STAB_PARAM_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, "--.-");
+//            values.put(DatabaseHelper.VAL_ALARM1_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_ALARM2_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_ALARM3_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_ALARM4_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_ALARM5_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_ALARM6_COLUMN, 0);
+//            values.put(DatabaseHelper.VAL_ALARM7_COLUMN, 0);
+
+            mSqLiteDatabase.update(DatabaseHelper.DATABASE_TABLE_CATHODES, values, "_id = ?",
                     new String[] {Integer.toString(dbId)});
 
         }
         else {
+
+            values.put(DatabaseHelper.VAL_DATETIME_COLUMN, "--.--.--/--:--:--");
+            values.put(DatabaseHelper.VAL_U_COLUMN, "--.-");
+            values.put(DatabaseHelper.VAL_I_COLUMN, "--.-");
+            values.put(DatabaseHelper.VAL_P_COLUMN, "-.--");
+            values.put(DatabaseHelper.VAL_DOOR_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_TC_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_SVN1_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_SVN2_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_CNT_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_220_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_TEMP_COLUMN, "--");
+            values.put(DatabaseHelper.VAL_HEATER_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_STAB_PARAM_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, "--.-");
+            values.put(DatabaseHelper.VAL_ALARM1_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARM2_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARM3_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARM4_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARM5_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARM6_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARM7_COLUMN, 0);
+
             // Вставляем данные в таблицу
-            mSqLiteDatabase.insert("Cathodes", null, values);
+            mSqLiteDatabase.insert(DatabaseHelper.DATABASE_TABLE_CATHODES, null, values);
         }
         super.onBackPressed();
     }

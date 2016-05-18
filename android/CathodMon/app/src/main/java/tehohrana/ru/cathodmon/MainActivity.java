@@ -146,8 +146,6 @@ public class MainActivity extends AppCompatActivity
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
 
-
-        menu.add(0, CM_ADD_ID, 0, "Добавить");
         menu.add(0, CM_EDIT_ID, 0, "Редактировать");
         menu.add(0, CM_DELETE_ID, 0, "Удалить");
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -163,12 +161,6 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId())
         {
-            case CM_ADD_ID:
-                Intent intent = new Intent(this, AddActivity.class);
-                intent.putExtra("isEdit",false);
-                intent.putExtra("dbPosition",0);
-                startActivity(intent);
-                break;
             case CM_DELETE_ID:
                 // получаем инфу о пункте списка
 
@@ -176,15 +168,15 @@ public class MainActivity extends AppCompatActivity
 
 
                 try{
-                    DatabaseHelper mDatabaseHelper = new DatabaseHelper(getApplicationContext(), "CathodMon2.db", null, 1);
+                    DatabaseHelper mDatabaseHelper = new DatabaseHelper(getApplicationContext(), DatabaseHelper.DATABASE_NAME, null, 1);
                     SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
 
-                    Cursor cursor = db.query("Cathodes", null, null, null, null, null, null) ;
+                    Cursor cursor = db.query(DatabaseHelper.DATABASE_TABLE_CATHODES, null, null, null, null, null, null) ;
                     int itemId;
                     if (cursor.moveToPosition(acmi.position))
                     {
                         itemId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
-                        db.delete("Cathodes", "_id = " + itemId, null);
+                        db.delete(DatabaseHelper.DATABASE_TABLE_CATHODES, "_id = " + itemId, null);
                         Toast.makeText(getApplicationContext(), "Запись с ID: " + itemId + " удалена из базы", Toast.LENGTH_LONG).show();
                     }
 
@@ -274,13 +266,13 @@ public class MainActivity extends AppCompatActivity
 
     public void updateListView()
     {
-        DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, "CathodMon2.db", null, 1);
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, 1);
         SQLiteDatabase cdb = mDatabaseHelper.getReadableDatabase();
 
 
 
 
-        Cursor cursor = cdb.query("Cathodes", null, null, null,
+        Cursor cursor = cdb.query(DatabaseHelper.DATABASE_TABLE_CATHODES, null, null, null,
                 null, null, null) ;
 
 

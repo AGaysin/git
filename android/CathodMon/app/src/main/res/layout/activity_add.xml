@@ -30,16 +30,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Описание:"
+                        android:text="Название СКЗ"
                         android:id="@+id/textViewAddTextText" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text=" Ok"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="  *не менее 5 символов"
                         android:id="@+id/textViewAddTextOk"
-                        android:textColor="@color/green" />
+                        android:textColor="@color/red" />
                 </LinearLayout>
 
                 <EditText
@@ -74,10 +74,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text=" Ok"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text=" *неверный формат"
                         android:id="@+id/textViewAddPhoneOk"
-                        android:textColor="@color/green"
+                        android:textColor="@color/red"
                         android:enabled="false" />
                 </LinearLayout>
 
@@ -92,7 +92,41 @@
                     android:inputType="phone|number|numberDecimal"
                     android:numeric="decimal" />
             </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
 
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Описание"
+                        android:id="@+id/textViewAddInfoText" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextAddInfo"
+
+                    android:editable="true"
+                    android:hint="введите описание станции"
+                    android:enabled="true"
+                    android:inputType="text"
+                    android:autoText="false"
+                    android:elegantTextHeight="false"
+                    android:singleLine="false"
+                    android:gravity="top"
+                    android:longClickable="false" />
+            </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -262,58 +296,59 @@
                         android:maxLength="1" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Коэфф. пересчета эл/сч."
-                        android:id="@+id/textView9" />
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:editable="true"
-                        android:ems="10"
-                        android:id="@+id/editTextCntScale"
-                        android:text="4200"
-                        android:enabled="true"
-                        android:maxLength="5" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Начальное показание эл/сч"
-                        android:id="@+id/textView10" />
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:editable="true"
-                        android:ems="10"
-                        android:id="@+id/editTextCntBegin"
-                        android:text="0"
-                        android:enabled="true"
-                        android:maxLength="10" />
-                </LinearLayout>
-
 
             </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Коэфф. пересчета эл/сч."
+                    android:id="@+id/textView9" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:editable="true"
+                    android:ems="10"
+                    android:id="@+id/editTextCntScale"
+                    android:text="4200"
+                    android:enabled="true"
+                    android:maxLength="5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Начальное показание эл/сч"
+                    android:id="@+id/textView10" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:editable="true"
+                    android:ems="10"
+                    android:id="@+id/editTextCntBegin"
+                    android:text="0"
+                    android:enabled="true"
+                    android:maxLength="10" />
+            </LinearLayout>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
