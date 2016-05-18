@@ -321,7 +321,7 @@ public class CathodeActivity extends Activity {
     }
 
     public void onBtnCathodeAskSmsClick(View view) {
-        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(CathodeActivity.this);
+        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(this);
         sendSmsIdGetDialog.setTitle("Будет отправлена SMS-команда! Вы уверены?");
 
         sendSmsIdGetDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
@@ -329,6 +329,7 @@ public class CathodeActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 mLastMessageId = getLastMessageId();
                 sendSMS(mDevicePhoneNumber, "&SET?");
+                prog1 = new ProgressDialog(CathodeActivity.this);
                 prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 prog1.setMessage("Ожидание запроса конфигурации оборудования...");
                 prog1.setIndeterminate(true); // выдать значек ожидания
@@ -351,30 +352,30 @@ public class CathodeActivity extends Activity {
 
     public void checkNewSms(){
 
-//        if (readSmsParameters(mLastMessageId))
-//        {
-//            prog1.dismiss();
-//            //Вывсти сообщение, что параметры успешно обновлены
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            isSettingsRead = true;
-//
-//
-//            //showParameters();
-//            builder.setTitle("Получено новое состояние станции")
-//                    .setMessage("Данные успешно обновлены и загружены")
-//                    .setIcon(R.drawable.ic_action_error)
-//                    .setCancelable(false)
-//                    .setNegativeButton("ОК",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    dialog.cancel();
-//                                }
-//                            });
-//            timerSmsCommandWaiting = 0;
-//            AlertDialog alert = builder.create();
-//            alert.show();
-//
-//        }
+        if (readSmsParameters(mLastMessageId))
+        {
+            prog1.dismiss();
+            //Вывсти сообщение, что параметры успешно обновлены
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            isSettingsRead = true;
+
+
+            //showParameters();
+            builder.setTitle("Получено новое состояние станции")
+                    .setMessage("Данные успешно обновлены и загружены")
+                    .setIcon(R.drawable.ic_action_error)
+                    .setCancelable(false)
+                    .setNegativeButton("ОК",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            timerSmsCommandWaiting = 0;
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
 
         prog1.setMessage("Ожидание ответа от станции ...(" + timerSmsCommandWaiting + ")");
         //Toast.makeText(getApplicationContext(), "check " + timerSmsCommandWaiting, Toast.LENGTH_SHORT).show();
@@ -405,7 +406,7 @@ public class CathodeActivity extends Activity {
         final String SMS_URI_INBOX = "content://sms/inbox";
         if (!mDevicePhoneNumber.isEmpty()) {
             try {
-                String mDevicePhoneNumberRequest = "address='" + mDevicePhoneNumber + "'";
+                String mDevicePhoneNumberRequest = "address='+" + mDevicePhoneNumber + "'";
                 String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
                 Cursor cur = getContentResolver().query(Uri.parse(SMS_URI_INBOX),
                         projection,
@@ -469,7 +470,7 @@ public class CathodeActivity extends Activity {
         final String SMS_URI_INBOX = "content://sms/inbox";
         if (!mDevicePhoneNumber.isEmpty()) {
             try {
-                String mDevicePhoneNumberRequest = "address='" + mDevicePhoneNumber + "'";
+                String mDevicePhoneNumberRequest = "address='+" + mDevicePhoneNumber + "'";
                 String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
                 Cursor cur = getContentResolver().query(Uri.parse(SMS_URI_INBOX),
                         projection,
@@ -478,7 +479,13 @@ public class CathodeActivity extends Activity {
                         "date desc");
                 //startManagingCursor(cur);
 
-                if (cur.moveToFirst()) return cur.getInt(cur.getColumnIndex("_id"));
+                if (cur.getCount()>0)
+                {
+                    cur.moveToFirst();
+                    int getLastIndexId=cur.getInt(cur.getColumnIndex("_id"));
+                    cur.close();
+                    return getLastIndexId;
+                }
                 cur.close();
             }
             catch (Exception ex) {
