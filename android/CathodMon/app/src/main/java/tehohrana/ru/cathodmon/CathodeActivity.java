@@ -17,7 +17,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,6 +52,13 @@ public class CathodeActivity extends Activity {
     private int mLastMessageId=0;
 
 
+    private SharedPreferences mSettings;
+
+    public final static String IS_SMS_AWAITING = "key_IsSmsAwaiting";
+    public final static String IS_SMS_RECEIVED = "key_IsSmsReceived";
+    public final static String NUMBER_SMS_AWAITING = "key_NumberSmsAwaiting";
+    public final static String TEXT_SMS_AWAITING = "key_TextSmsAwaiting";
+    public final static String TEXT_TIMERECEIVED = "key_TextSmsTimeReceived";
 
 
     private DatabaseHelper mDatabaseHelper;
@@ -92,9 +101,10 @@ public class CathodeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cathode);
-        int dbPosition = getIntent().getIntExtra("db_cathode_position", 0);
-        dbId=0;
-        dbDeviceType=0;
+
+
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         mTextViewCathodeText = (TextView)findViewById(R.id.textViewCathodeTextVal);
         mTextViewCathodePhone = (TextView) findViewById(R.id.textViewCathodePhoneVal);
@@ -134,10 +144,377 @@ public class CathodeActivity extends Activity {
         mButtonValStabParam = (Button)findViewById(R.id.buttonCathodeStabRsSet);
 
 
+        updateViewFromDatabase();
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        handler.postDelayed(task, 1000);
+        super.onResume();
+
+
+    }
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(task);
+        super.onPause();
+
+    }
+
+    @Override
+    public void onStop() {
+
+
+        super.onStop();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    public void onBackBtnPressed(View view) {
+        super.onBackPressed();
+    }
+
+    public void onBtnCathodeCallClick(View view) {
+
+    }
+
+    public void onBtnCathodeAskSmsClick(View view) {
+        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(this);
+        sendSmsIdGetDialog.setTitle("Будет отправлена SMS-команда! Вы уверены?");
+
+        sendSmsIdGetDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Send ASK SMS message
+                //sendSMS(mDevicePhoneNumber, "&SET?");
+
+                //Put param to shared preferences to wait answer from host
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(CathodeActivity.NUMBER_SMS_AWAITING, mDevicePhoneNumber);
+                editor.putBoolean(CathodeActivity.IS_SMS_RECEIVED, false);
+                editor.putBoolean(CathodeActivity.IS_SMS_AWAITING, true);
+                editor.apply();
+
+
+                prog1 = new ProgressDialog(CathodeActivity.this);
+                prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                prog1.setMessage("Ожидание запроса конфигурации оборудования...");
+                prog1.setIndeterminate(true); // выдать значек ожидания
+                prog1.setCancelable(false);
+                timerSmsCommandWaiting = 120;
+                prog1.show();
+            }
+        });
+
+        sendSmsIdGetDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //нет действий
+            }
+        });
+        sendSmsIdGetDialog.show();
+    }
+
+
+
+    public void checkNewSms(){
+
+
+        if (mSettings.getBoolean(IS_SMS_RECEIVED,false))
+        {
+            String strSmsData = mSettings.getString(TEXT_SMS_AWAITING,"");
+
+            readSmsParameters(strSmsData);
+            prog1.dismiss();
+            //Вывсти сообщение, что параметры успешно обновлены
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            isSettingsRead = true;
+
+
+            //showParameters();
+            builder.setTitle("Получено новое состояние станции")
+                    .setMessage("Данные успешно обновлены и загружены")
+                    .setIcon(R.drawable.ic_action_error)
+                    .setCancelable(false)
+                    .setNegativeButton("ОК",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            timerSmsCommandWaiting = 0;
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
+
+        prog1.setMessage("Ожидание ответа от станции ...(" + timerSmsCommandWaiting + ")");
+        //Toast.makeText(getApplicationContext(), "check " + timerSmsCommandWaiting, Toast.LENGTH_SHORT).show();
+        //prog1.cancel();
+    }
+
+    public void cancelWaiting(){
+        prog1.dismiss();
+        //Вывести сообщение о таймауте
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Время вышло!")
+                .setMessage("Время ожидания SMS-сообщения истекло!")
+                .setIcon(R.drawable.ic_action_error)
+                .setCancelable(false)
+                .setNegativeButton("ОК",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+
+    public boolean readSmsParameters(String string){
+
+
+        String mTimeDate = mSettings.getString(TEXT_TIMERECEIVED,"");
+        byte[] byteArray = hexStringToByteArray(string);
+        int ArraySize = byteArray.length;
+        int[] Array = new int[ArraySize];
+        for (int i=0; i<ArraySize; i++)
+        {
+            if (byteArray[i]>=0) Array[i]=byteArray[i];
+            else Array[i] = 256 + byteArray[i];
+        }
+
+
+        //Инициализация переменных // параметров
+        int Uout = 0;
+        int Iout = 0;
+        int Upot = 0;
+        int RsU220 = 0;
+        int StabParam = 0;
+        int RsPwm = 0;
+        int StabValue =0;
+        int RsInputsOutputs=0;
+        int RsStatus=0;
+        int RsType=0;
+        String RsProgDate = "";
+        int RsAlarm1 = 0;
+        int RsAlarm2 = 0;
+        int RsAlarm3 = 0;
+        int RsAlarm4 = 0;
+        int RsAlarm5 = 0;
+        int RsAlarm6 = 0;
+        int RsAlarm7 = 0;
+        int RsEnergyCntKoeff = 0;
+        int isSkzWorking = 0;
+        int isTermostatWorking = 0;
+        int isDoorEnable = 0;
+        int isControlLocal = 0;
+        long EnergyCnt = 0;
+        int Temp = 0;
+        long Svn1 = 0;
+        long Svn2 = 0;
+        //Получение данных
+        if (Array[0]==0x01) {
+            //Универсальный BTGV
+            Uout = Array[1] * 256 + Array[2];
+            Iout = Array[3] * 256 + Array[4];
+            Upot = Array[5] * 256 + Array[6];
+            StabValue = Array[7] * 256 + Array[8];
+            isSkzWorking = ((Array[9] & 0x10) != 0) ? 1 : 0;
+            isTermostatWorking = ((Array[9] & 0x20) != 0) ? 1 : 0;
+            isDoorEnable = ((Array[9] & 0x01) != 0) ? 1 : 0;
+            isControlLocal = ((Array[9] & 0x02) != 0) ? 1 : 0;
+            EnergyCnt = Array[14] + Array[13] * 0x100 + Array[12] * 0x10000 + Array[11] * 0x1000000; // + Array[10]*0x100000000
+            Temp = Array[15];
+            if (Temp >= 128) Temp -= 256;
+            Svn1 = Array[18] + Array[17] * 0x100 + Array[16] * 0x10000;
+            Svn2 = Array[21] + Array[20] * 0x100 + Array[19] * 0x10000;
+
+
+        }
+        else if (Array[0]==0x11)
+        {
+            //Интерфейсный BTGSM RS
+            Uout = Array[1] * 256 + Array[2];
+            Iout = Array[3] * 256 + Array[4];
+            Upot = Array[5] * 256 + Array[6];
+            RsU220 = Array[7] * 256 + Array[8];
+            RsPwm = Array[9] * 256 + Array[10];
+
+            StabParam = Array[11];
+            StabValue = Array[12] * 256 + Array[13];
+            EnergyCnt = Array[17] + Array[16] * 0x100 + Array[15] * 0x10000 + Array[14] * 0x1000000; // + Array[10]*0x100000000
+            RsEnergyCntKoeff = Array[18] * 256 + Array[19];
+
+            Svn1 = Array[23] + Array[22] * 0x100 + Array[21] * 0x10000 + Array[20] * 0x1000000;
+            Svn2 = Array[27] + Array[26] * 0x100 + Array[25] * 0x10000 + Array[24] * 0x1000000;
+
+            Temp = Array[28];
+            if (Temp >= 128) Temp -= 256;
+
+            RsInputsOutputs = Array[29];
+            RsStatus = Array[30];
+            RsType = Array[31];
+            RsProgDate = String.valueOf(Array[32]) + "." + String.valueOf(Array[33]) + "." + String.valueOf(Array[34]);
+
+
+            if ((RsStatus & (1<<0)) != 0) StabParam += 0x10;
+
+            RsAlarm1 = ((RsStatus & (1<<1)) != 0) ? 1 : 0;
+            RsAlarm2 = ((RsStatus & (1<<2)) != 0) ? 1 : 0;
+            RsAlarm3 = ((RsStatus & (1<<3)) != 0) ? 1 : 0;
+            RsAlarm4 = ((RsStatus & (1<<4)) != 0) ? 1 : 0;
+            RsAlarm5 = ((RsStatus & (1<<5)) != 0) ? 1 : 0;
+            RsAlarm6 = ((RsStatus & (1<<6)) != 0) ? 1 : 0;
+            RsAlarm7 = ((RsStatus & (1<<7)) != 0) ? 1 : 0;
+
+
+            isTermostatWorking = ((RsInputsOutputs & 0x10) != 0) ? 1 : 0;
+            isDoorEnable = ((RsInputsOutputs & 0x01) != 0) ? 1 : 0;
+
+        }
+
+
+
+
+        //Записать даные в архив
+        mDatabaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, 1);
+
+        mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        // Задайте значения для каждого столбца
+
+
+
+        //Надо ли читать данные?
+        values.put(DatabaseHelper.VAL_DATETIME_COLUMN, mTimeDate);
+        values.put(DatabaseHelper.VAL_U_COLUMN, String.valueOf(Uout));
+        values.put(DatabaseHelper.VAL_I_COLUMN, String.valueOf(Iout));
+        values.put(DatabaseHelper.VAL_P_COLUMN, String.valueOf(Upot));
+        values.put(DatabaseHelper.VAL_DOOR_COLUMN, isDoorEnable);
+        values.put(DatabaseHelper.VAL_TC_COLUMN, isControlLocal);
+        values.put(DatabaseHelper.VAL_SVN1_COLUMN, String.valueOf(Svn1));
+        values.put(DatabaseHelper.VAL_SVN2_COLUMN, String.valueOf(Svn2));
+        values.put(DatabaseHelper.VAL_CNT_COLUMN, String.valueOf(EnergyCnt));
+        values.put(DatabaseHelper.VAL_220_COLUMN, String.valueOf(RsU220));
+        values.put(DatabaseHelper.VAL_TEMP_COLUMN, String.valueOf(Temp));
+        values.put(DatabaseHelper.VAL_HEATER_COLUMN, isTermostatWorking);
+        values.put(DatabaseHelper.VAL_STAB_PARAM_COLUMN, StabParam);
+        values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, String.valueOf(StabValue));
+        values.put(DatabaseHelper.VAL_ALARM1_COLUMN, RsAlarm1);
+        values.put(DatabaseHelper.VAL_ALARM2_COLUMN, RsAlarm2);
+        values.put(DatabaseHelper.VAL_ALARM3_COLUMN, RsAlarm3);
+        values.put(DatabaseHelper.VAL_ALARM4_COLUMN, RsAlarm4);
+        values.put(DatabaseHelper.VAL_ALARM5_COLUMN, RsAlarm5);
+        values.put(DatabaseHelper.VAL_ALARM6_COLUMN, RsAlarm6);
+        values.put(DatabaseHelper.VAL_ALARM7_COLUMN, RsAlarm7);
+
+        mSqLiteDatabase.update(DatabaseHelper.DATABASE_TABLE_CATHODES, values, "_id = ?",
+                new String[] {Integer.toString(dbId)});
+
+
+
+        //Отобразить данные
+        updateViewFromDatabase();
+        return false;
+    }
+
+
+    private void sendSMS(String phoneNumber, String message)    {
+        String SENT="SMS_SENT";
+        String DELIVERED="SMS_DELIVERED";
+
+        PendingIntent sentPI= PendingIntent.getBroadcast(this,0,
+                new Intent(SENT),0);
+
+        PendingIntent deliveredPI= PendingIntent.getBroadcast(this,0,
+                new Intent(DELIVERED),0);
+
+        //---когда SMS отправлено---
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS Отправлено",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(getBaseContext(), "Ошибка отправки",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(getBaseContext(), "Сервис недоступен",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(getBaseContext(), "Null PDU",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(getBaseContext(), "Модем выключен",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+                unregisterReceiver(this);
+            }
+        }, new IntentFilter(SENT));
+
+        //---когда SMS доставлено---
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS Доставлено",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getBaseContext(), "SMS Не доставлено",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                unregisterReceiver(this);
+            }
+        }, new IntentFilter(DELIVERED));
+
+        SmsManager sms= SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
+    void updateViewFromDatabase()
+    {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, 1);
         SQLiteDatabase cdb = mDatabaseHelper.getReadableDatabase();
 
         Cursor cursor = cdb.query(DatabaseHelper.DATABASE_TABLE_CATHODES, null, null, null, null, null, null) ;
+
+        int dbPosition = getIntent().getIntExtra("db_cathode_position", 0);
+        dbId=0;
+        dbDeviceType=0;
 
         if (cursor.moveToPosition(dbPosition))
         {
@@ -231,7 +608,7 @@ public class CathodeActivity extends Activity {
             mTextViewValStabRs.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN )));
             mTextViewValStabUniver.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN )));
 
-            switch (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_PARAM_COLUMN)))
+            switch (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_PARAM_COLUMN)) & 0x0F)
             {
                 case 1: mButtonValStabParam.setText("Напряжение, В (Изменить)"); break;
                 case 2: mButtonValStabParam.setText("Ток, А (Изменить)"); break;
@@ -241,7 +618,7 @@ public class CathodeActivity extends Activity {
 
             if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM1_COLUMN))==0)
                 mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_gray));
+                        this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
@@ -288,274 +665,6 @@ public class CathodeActivity extends Activity {
         cursor.close();
         cdb.close();
         mDatabaseHelper.close();
-
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        handler.postDelayed(task, 1000);
-        super.onResume();
-
-
-    }
-    @Override
-    protected void onPause() {
-        handler.removeCallbacks(task);
-        super.onPause();
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-    }
-
-    public void onBackBtnPressed(View view) {
-        super.onBackPressed();
-    }
-
-    public void onBtnCathodeCallClick(View view) {
-    }
-
-    public void onBtnCathodeAskSmsClick(View view) {
-        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(this);
-        sendSmsIdGetDialog.setTitle("Будет отправлена SMS-команда! Вы уверены?");
-
-        sendSmsIdGetDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mLastMessageId = getLastMessageId();
-                sendSMS(mDevicePhoneNumber, "&SET?");
-                prog1 = new ProgressDialog(CathodeActivity.this);
-                prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                prog1.setMessage("Ожидание запроса конфигурации оборудования...");
-                prog1.setIndeterminate(true); // выдать значек ожидания
-                prog1.setCancelable(false);
-                timerSmsCommandWaiting = 90;
-                prog1.show();
-            }
-        });
-
-        sendSmsIdGetDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //нет действий
-            }
-        });
-        sendSmsIdGetDialog.show();
-    }
-
-
-
-    public void checkNewSms(){
-
-        if (readSmsParameters(mLastMessageId))
-        {
-            prog1.dismiss();
-            //Вывсти сообщение, что параметры успешно обновлены
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            isSettingsRead = true;
-
-
-            //showParameters();
-            builder.setTitle("Получено новое состояние станции")
-                    .setMessage("Данные успешно обновлены и загружены")
-                    .setIcon(R.drawable.ic_action_error)
-                    .setCancelable(false)
-                    .setNegativeButton("ОК",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            timerSmsCommandWaiting = 0;
-            AlertDialog alert = builder.create();
-            alert.show();
-
-        }
-
-        prog1.setMessage("Ожидание ответа от станции ...(" + timerSmsCommandWaiting + ")");
-        //Toast.makeText(getApplicationContext(), "check " + timerSmsCommandWaiting, Toast.LENGTH_SHORT).show();
-        //prog1.cancel();
-    }
-
-    public void cancelWaiting(){
-        prog1.dismiss();
-        //Вывести сообщение о таймауте
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Время вышло!")
-                .setMessage("Время ожидания SMS-сообщения истекло!")
-                .setIcon(R.drawable.ic_action_error)
-                .setCancelable(false)
-                .setNegativeButton("ОК",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-        AlertDialog alert = builder.create();
-        alert.show();
-
-    }
-
-
-    public boolean readSmsParameters(int mId){
-        final String SMS_URI_INBOX = "content://sms/inbox";
-        if (!mDevicePhoneNumber.isEmpty()) {
-            try {
-                String mDevicePhoneNumberRequest = "address='+" + mDevicePhoneNumber + "'";
-                String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
-                Cursor cur = getContentResolver().query(Uri.parse(SMS_URI_INBOX),
-                        projection,
-                        mDevicePhoneNumberRequest,
-                        null,
-                        "date desc");
-                //startManagingCursor(cur);
-
-                if (cur.moveToFirst()) {
-                    if (cur.getInt(cur.getColumnIndex("_id"))>mId) {
-
-                        String bodyText = cur.getString(cur.getColumnIndex("body"));
-
-                        //проверка протокола
-                        if (bodyText.contains("&SET=")) {
-                            Pattern patternSharp = Pattern.compile("#");
-                            String[] mReceivedData = patternSharp.split(bodyText);
-                            Pattern patternStar = Pattern.compile("\\*");
-                            boolean mMaskPcnSms;
-                            boolean mMaskPcnCall;
-                            boolean mMaskOwn1Sms;
-                            boolean mMaskOwn1Call;
-                            boolean mMaskOwn2Sms;
-                            boolean mMaskOwn2Call;
-                            int mMaskInt;
-
-                            for (String string : mReceivedData) {
-                                String[] mReceivedDataStar = patternStar.split(string.substring(1));
-
-                                try {
-                                    mMaskInt = Integer.parseInt(mReceivedDataStar[mReceivedDataStar.length - 1]);
-                                } catch (Exception ex) {
-                                    mMaskInt = 0;
-                                    //Toast.makeText(this, "Exception: " + ex.toString(), Toast.LENGTH_SHORT).show();
-                                }
-
-                                mMaskPcnSms = (mMaskInt / 100 == 1 || mMaskInt / 100 == 3);
-                                mMaskPcnCall = (mMaskInt >= 200);
-                                mMaskOwn1Sms = ((mMaskInt / 10) % 10 == 1 || (mMaskInt / 10) % 10 == 3);
-                                mMaskOwn1Call = ((mMaskInt / 10) % 10 >= 2);
-                                mMaskOwn2Sms = (mMaskInt % 10 == 1 || mMaskInt % 10 == 3);
-                                mMaskOwn2Call = (mMaskInt % 10 >= 2);
-
-
-                            }
-                            cur.close();
-                            return true;
-                        }
-                    }
-                }
-                cur.close();
-            }
-            catch (Exception ex) {
-                Log.d("SQLiteException", ex.getMessage());
-            }
-        }
-        return false;
-    }
-
-    public int getLastMessageId(){
-        final String SMS_URI_INBOX = "content://sms/inbox";
-        if (!mDevicePhoneNumber.isEmpty()) {
-            try {
-                String mDevicePhoneNumberRequest = "address='+" + mDevicePhoneNumber + "'";
-                String[] projection = new String[]{"_id", "address", "person", "body", "date", "type"};
-                Cursor cur = getContentResolver().query(Uri.parse(SMS_URI_INBOX),
-                        projection,
-                        mDevicePhoneNumberRequest,
-                        null,
-                        "date desc");
-                //startManagingCursor(cur);
-
-                if (cur.getCount()>0)
-                {
-                    cur.moveToFirst();
-                    int getLastIndexId=cur.getInt(cur.getColumnIndex("_id"));
-                    cur.close();
-                    return getLastIndexId;
-                }
-                cur.close();
-            }
-            catch (Exception ex) {
-                Log.d("SQLiteException", ex.getMessage());
-            }
-        }
-        return 0;
-    }
-    private void sendSMS(String phoneNumber, String message)    {
-        String SENT="SMS_SENT";
-        String DELIVERED="SMS_DELIVERED";
-
-        PendingIntent sentPI= PendingIntent.getBroadcast(this,0,
-                new Intent(SENT),0);
-
-        PendingIntent deliveredPI= PendingIntent.getBroadcast(this,0,
-                new Intent(DELIVERED),0);
-
-        //---когда SMS отправлено---
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS Отправлено",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(getBaseContext(), "Ошибка отправки",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(getBaseContext(), "Сервис недоступен",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(getBaseContext(), "Null PDU",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(getBaseContext(), "Модем выключен",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-
-                }
-                unregisterReceiver(this);
-            }
-        }, new IntentFilter(SENT));
-
-        //---когда SMS доставлено---
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS Доставлено",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(getBaseContext(), "SMS Не доставлено",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                unregisterReceiver(this);
-            }
-        }, new IntentFilter(DELIVERED));
-
-        SmsManager sms= SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-
     }
 
 }
