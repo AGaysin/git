@@ -31,10 +31,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +50,17 @@ import java.util.regex.Pattern;
 /**
  * Created by AG on 19.04.2016.
  */
-public class CathodeActivity extends Activity {
+public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
+
+
+    TextView mTextViewControlSetValue;
+    RadioButton mRadioButtonI, mRadioButtonU, mRadioButtonP;
+    EditText mEditTextControlSetValue;
+    SeekBar mSeekBarControlSetValue;
+    LinearLayout mLinearLayoutControlSetRs, mLinearLayoutControlSet, mLinearLayoutCathodeMain;
+    RadioGroup mRadioGroupControlSet;
+
+
 
     ProgressDialog prog1;
     public boolean isSettingsRead = false;
@@ -67,6 +80,8 @@ public class CathodeActivity extends Activity {
     private SQLiteDatabase mSqLiteDatabase;
 
 
+    int mControlSetParam=0;
+    boolean isControlSetWindow=false;
     TextView mTextViewCathodeText;
     TextView mTextViewCathodePhone;
     TextView mTextViewCathodeType, mTextViewCathodeTitle;
@@ -79,6 +94,8 @@ public class CathodeActivity extends Activity {
     ImageView mImageViewAlarm1,mImageViewAlarm2,mImageViewAlarm3,mImageViewAlarm4,
             mImageViewAlarm5,mImageViewAlarm6,mImageViewAlarm7;
     Button mButtonValStabParam;
+
+
 
     LinearLayout mLinearLayoutUseti, mLinearLayoutCathodeStabRs, mLinearLayoutCathodeStabUnivers,
     mLinearLayoutCathodeAlarms;
@@ -100,6 +117,8 @@ public class CathodeActivity extends Activity {
         }
     };
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +126,39 @@ public class CathodeActivity extends Activity {
 
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        isControlSetWindow = false;
+        mRadioButtonI = (RadioButton)findViewById(R.id.radioButtonControlSetI);
+        mRadioButtonU = (RadioButton)findViewById(R.id.radioButtonControlSetU);
+        mRadioButtonP = (RadioButton)findViewById(R.id.radioButtonControlSetP);
+        mRadioGroupControlSet = (RadioGroup)findViewById(R.id.radioGroupControlSet);
 
+        mRadioGroupControlSet.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+
+                if (mRadioButtonI.isChecked())
+                {
+                    mControlSetParam = 1;
+                    mSeekBarControlSetValue.setMax(990);
+                    mTextViewControlSetValue.setText("Установите величину выходного тока, А");
+
+                }
+                else if (mRadioButtonU.isChecked())
+                {
+                    mControlSetParam = 2;
+                    mSeekBarControlSetValue.setMax(990);
+                    mTextViewControlSetValue.setText("Установите величину выхоного напряжения, В");
+
+                }
+                else if (mRadioButtonP.isChecked())
+                {
+                    mControlSetParam = 3;
+                    mSeekBarControlSetValue.setMax(500);
+                    mTextViewControlSetValue.setText("Установите величину потенциала, В");
+                }
+            }
+        });
 
         mTextViewCathodeText = (TextView)findViewById(R.id.textViewCathodeTextVal);
         mTextViewCathodePhone = (TextView) findViewById(R.id.textViewCathodePhoneVal);
@@ -118,6 +169,17 @@ public class CathodeActivity extends Activity {
         mLinearLayoutCathodeStabRs = (LinearLayout) findViewById(R.id.linearLayoutCathodeStabRs);
         mLinearLayoutCathodeStabUnivers = (LinearLayout) findViewById(R.id.linearLayoutCathodeStabUniver);
         mLinearLayoutCathodeAlarms = (LinearLayout) findViewById(R.id.linearLayoutCathodeAlarms);
+
+        mTextViewControlSetValue = (TextView)findViewById(R.id.textViewConstrolSetValue);
+        mEditTextControlSetValue = (EditText)findViewById(R.id.editTextControlSetValue);
+        mSeekBarControlSetValue = (SeekBar)findViewById(R.id.seekBarControlSetValue);
+
+        mSeekBarControlSetValue.setOnSeekBarChangeListener(this);
+
+
+        mLinearLayoutControlSetRs = (LinearLayout)findViewById(R.id.linearLayoutControlSetRs);
+        mLinearLayoutControlSet = (LinearLayout)findViewById(R.id.linearLayoutControlSet);
+                mLinearLayoutCathodeMain = (LinearLayout)findViewById(R.id.linearLayoutCathodeMain);
 
 
 
@@ -146,6 +208,8 @@ public class CathodeActivity extends Activity {
 
         mButtonValStabParam = (Button)findViewById(R.id.buttonCathodeStabRsSet);
 
+        mLinearLayoutCathodeMain.setVisibility(View.VISIBLE);
+        mLinearLayoutControlSet.setVisibility(View.GONE);
 
         updateViewFromDatabase();
 
@@ -177,8 +241,45 @@ public class CathodeActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (isControlSetWindow)
+        {
+            mLinearLayoutCathodeMain.setVisibility(View.VISIBLE);
+            mLinearLayoutControlSet.setVisibility(View.GONE);
+            isControlSetWindow = false;
+        }
+        else super.onBackPressed();
 
+    }
+
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress,
+                                  boolean fromUser) {
+
+        if (dbDeviceType==0) mEditTextControlSetValue.setText(String.valueOf(progress));
+        else
+        {
+            switch (mControlSetParam)
+            {
+                case 1:
+                case 2:
+                    mEditTextControlSetValue.setText(String.valueOf(progress/10)+","+String.valueOf(progress%10));
+                    break;
+                case 3:
+                    mEditTextControlSetValue.setText(String.valueOf(progress/100)+","+String.valueOf(progress%100));
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        //mEditTextControlSetValue.setText(String.valueOf(mSeekBarControlSetValue.getProgress()));
     }
 
     public void onBackBtnPressed(View view) {
@@ -198,27 +299,25 @@ public class CathodeActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 //Send ASK SMS message
                 smsProtocolType = 0;
-                byte[] byteArrayToSend = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,43,44,45,46,47,48,49};
-
-                byte[] smsBody = "Let me know if you get this SMS".getBytes();
-                short port = 6734;
-                short port2 = 2345;
-                short port3 = 0;
                 //sendByteArrayAsSMS(mDevicePhoneNumber, byteArrayToSend);
-                sendByteArrayAsSMS(mDevicePhoneNumber, port, smsBody);
-                sendByteArrayAsSMS(mDevicePhoneNumber, port2, smsBody);
-                sendByteArrayAsSMS(mDevicePhoneNumber, port3, smsBody);
+                //sendByteArrayAsSMS(mDevicePhoneNumber, port, smsBody);
+                //sendByteArrayAsSMS(mDevicePhoneNumber, port2, smsBody);
+                //sendByteArrayAsSMS(mDevicePhoneNumber, port3, smsBody);
                 //sendByteArrayAsSMS("+79051815744", port2, smsBody);
                 //String string2 = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
 
-                sendSMS(mDevicePhoneNumber, new String(byteArrayToSend, Charset.forName("UTF-8")));
-                sendSMS(mDevicePhoneNumber, new String(byteArrayToSend, Charset.forName("US-ASCII")));
+                //sendSMS(mDevicePhoneNumber, new String(byteArrayToSend, Charset.forName("UTF-8")));
+                //sendSMS(mDevicePhoneNumber, new String(byteArrayToSend, Charset.forName("US-ASCII")));
 
-                String original = new String("\u0001" + "\u0002"+ "\u0003"+ "\u0004" + "\u0005" + "\u0006" + "\u0007" +"\u0008" +"\u0009" +"\u00010" +
-                        "\u0011" + "\u0012"+ "\u0013"+ "\u0014" + "\u0015" + "\u0016" + "\u0017" +"\u0018" +"\u0019" +"\u00020" +
-                        "\u0021" + "\u0022"+ "\u0023"+ "\u0024" + "\u0025" + "\u0026" + "\u0027" +"\u0028" +"\u0029" +"\u00030" +
-                        "\u0031" + "\u0032"+ "\u0033"+ "\u0034" + "\u0035" + "\u0036" + "\u0037" +"\u0038" +"\u0039" +"\u00040");
-                sendSMS(mDevicePhoneNumber, original);
+                if (dbDeviceType==0)
+                {
+                    sendSMS(mDevicePhoneNumber, new String("\u0100"));
+                }
+                else
+                {
+                    sendSMS(mDevicePhoneNumber, new String("\u1100"));
+                }
+
 
                 //Put param to shared preferences to wait answer from host
                 SharedPreferences.Editor editor = mSettings.edit();
@@ -230,7 +329,7 @@ public class CathodeActivity extends Activity {
 
                 prog1 = new ProgressDialog(CathodeActivity.this);
                 prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                prog1.setMessage("Ожидание запроса конфигурации оборудования...");
+                prog1.setMessage("Ожидание ответа от станции...");
                 prog1.setIndeterminate(true); // выдать значек ожидания
                 prog1.setCancelable(false);
                 timerSmsCommandWaiting = 120;
@@ -812,4 +911,97 @@ public class CathodeActivity extends Activity {
         mDatabaseHelper.close();
     }
 
+    public void onBtnCathodeControlSetClick(View view) {
+
+
+        AlertDialog.Builder sendSmsIdGetDialog = new AlertDialog.Builder(this);
+        sendSmsIdGetDialog.setTitle("Будет отправлена SMS-команда! Вы уверены?");
+
+        sendSmsIdGetDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Send ASK SMS message
+                smsProtocolType = 0;
+
+
+                int valueSet = mSeekBarControlSetValue.getProgress();
+                if (dbDeviceType==0)
+                {
+                    //03XXXX00
+                    String s = "\u0300" + Character.toString((char)(valueSet<<8));
+                    sendSMS(mDevicePhoneNumber, s);
+                }
+                else
+                {
+                    //12FFGGGG
+                    String s = new String();
+                    switch (mControlSetParam)
+                    {
+                        case 1:
+                            s = "\u1201" + Character.toString((char)(valueSet));
+                            break;
+                        case 2:
+                            s = "\u1202" + Character.toString((char)(valueSet));
+                            break;
+                        case 3:
+                            s = "\u1203" + Character.toString((char)(valueSet));
+                            break;
+                    }
+
+                    sendSMS(mDevicePhoneNumber, s);
+                }
+
+
+                //Put param to shared preferences to wait answer from host
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(CathodeActivity.NUMBER_SMS_AWAITING, mDevicePhoneNumber);
+                editor.putBoolean(CathodeActivity.IS_SMS_RECEIVED, false);
+                editor.putBoolean(CathodeActivity.IS_SMS_AWAITING, true);
+                editor.apply();
+
+
+                prog1 = new ProgressDialog(CathodeActivity.this);
+                prog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                prog1.setMessage("Ожидание ответа от станции...");
+                prog1.setIndeterminate(true); // выдать значек ожидания
+                prog1.setCancelable(false);
+                timerSmsCommandWaiting = 120;
+                prog1.show();
+            }
+        });
+
+        sendSmsIdGetDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //нет действий
+            }
+        });
+        sendSmsIdGetDialog.show();
+
+        mLinearLayoutCathodeMain.setVisibility(View.VISIBLE);
+        mLinearLayoutControlSet.setVisibility(View.GONE);
+        isControlSetWindow = false;
+
+
+        //wait for
+
+    }
+
+    public void onBtnCathodeControlSetRsClick(View view) {
+        mLinearLayoutCathodeMain.setVisibility(View.GONE);
+        mLinearLayoutControlSet.setVisibility(View.VISIBLE);
+        isControlSetWindow = true;
+        if (dbDeviceType==0)
+        {
+            mLinearLayoutControlSetRs.setVisibility(View.GONE);
+            mSeekBarControlSetValue.setMax(100);
+            mTextViewControlSetValue.setText("Установите величину управления, %");
+        }
+        else
+        {
+            mSeekBarControlSetValue.setMax(990);
+            mTextViewControlSetValue.setText("Установите величину выходного тока, А");
+            mLinearLayoutControlSetRs.setVisibility(View.VISIBLE);
+        }
+    }
 }

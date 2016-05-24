@@ -2,6 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:id="@+id/linearLayoutCathodeMain">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -591,6 +596,7 @@
                             <Button
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:onClick="onBtnCathodeControlSetRsClick"
                                 android:text="Потенциал (изменить)"
                                 android:id="@+id/buttonCathodeStabRsSet" />
                         </LinearLayout>
@@ -646,6 +652,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="Изменить"
+                                android:onClick="onBtnCathodeControlSetRsClick"
                                 android:id="@+id/buttonCathodeStabUniverSet" />
                         </LinearLayout>
                     </LinearLayout>
@@ -856,6 +863,99 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+</LinearLayout>
+
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:id="@+id/linearLayoutControlSet">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:id="@+id/linearLayoutControlSetRs">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Выберите режим стабилизации"
+                android:id="@+id/textViewControlSetParam" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/radioGroupControlSet">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ток"
+                    android:id="@+id/radioButtonControlSetI"
+                    android:checked="true"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Напр."
+                    android:id="@+id/radioButtonControlSetU"
+                    android:checked="false"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Пот."
+                    android:id="@+id/radioButtonControlSetP"
+                    android:checked="false"
+                    android:layout_weight="1" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Установите величину управления, %"
+            android:id="@+id/textViewConstrolSetValue"
+            android:layout_margin="10dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editTextControlSetValue"
+            android:layout_margin="10dp" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBarControlSetValue"
+            android:indeterminate="false"
+            android:max="100"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Установить"
+            android:id="@+id/buttonControlSet"
+            android:onClick="onBtnCathodeControlSetClick"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp" />
     </LinearLayout>
 
     </LinearLayout>
