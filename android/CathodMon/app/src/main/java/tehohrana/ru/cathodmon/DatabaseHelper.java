@@ -9,8 +9,8 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns{
 
-    public static final String DATABASE_NAME = "CathodMon3.db";
-    private static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "CathodMon.db";
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_TABLE_CATHODES = "Cathodes";
 
     public static final String TEXT_COLUMN = "description_text";
@@ -38,13 +38,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns{
     public static final String VAL_HEATER_COLUMN = "val_heater";
     public static final String VAL_STAB_PARAM_COLUMN = "val_stab_param";
     public static final String VAL_STAB_VAL_COLUMN = "val_stab_val";
-    public static final String VAL_ALARM1_COLUMN = "val_alarm1";
-    public static final String VAL_ALARM2_COLUMN = "val_alarm2";
-    public static final String VAL_ALARM3_COLUMN = "val_alarm3";
-    public static final String VAL_ALARM4_COLUMN = "val_alarm4";
-    public static final String VAL_ALARM5_COLUMN = "val_alarm5";
-    public static final String VAL_ALARM6_COLUMN = "val_alarm6";
-    public static final String VAL_ALARM7_COLUMN = "val_alarm7";
+    public static final String VAL_ALARMS_MASK_COLUMN = "val_alarm_mask";
+    public static final String VAL_STAB_OK_COLUMN = "val_stab_ok";
 
 
     private static final String DATABASE_CREATE_SCRIPT = "create table "
@@ -61,26 +56,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns{
             + CNT_BEGIN_COLUMN + " integer, "
             + CNT_SCALE_COLUMN + " integer, "
             + VAL_DATETIME_COLUMN + " text not null, "
-            + VAL_U_COLUMN + " text not null, "
-            + VAL_I_COLUMN + " text not null, "
-            + VAL_P_COLUMN + " text not null, "
+            + VAL_U_COLUMN + " integer, "
+            + VAL_I_COLUMN + " integer, "
+            + VAL_P_COLUMN + " integer, "
             + VAL_DOOR_COLUMN + " integer, "
             + VAL_TC_COLUMN + " integer, "
             + VAL_SVN1_COLUMN + " integer, "
             + VAL_SVN2_COLUMN + " integer, "
             + VAL_CNT_COLUMN + " integer, "
             + VAL_220_COLUMN + " integer, "
-            + VAL_TEMP_COLUMN + " text not null, "
+            + VAL_TEMP_COLUMN + " integer, "
             + VAL_HEATER_COLUMN + " integer, "
             + VAL_STAB_PARAM_COLUMN + " integer, "
-            + VAL_STAB_VAL_COLUMN + " text not null, "
-            + VAL_ALARM1_COLUMN + " integer, "
-            + VAL_ALARM2_COLUMN + " integer, "
-            + VAL_ALARM3_COLUMN + " integer, "
-            + VAL_ALARM4_COLUMN + " integer, "
-            + VAL_ALARM5_COLUMN + " integer, "
-            + VAL_ALARM6_COLUMN + " integer, "
-            + VAL_ALARM7_COLUMN  + " integer);";
+            + VAL_STAB_VAL_COLUMN + " integer, "
+            + VAL_ALARMS_MASK_COLUMN + " integer, "
+            + VAL_STAB_OK_COLUMN  + " integer);";
 
 
 

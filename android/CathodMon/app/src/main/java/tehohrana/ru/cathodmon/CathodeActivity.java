@@ -23,6 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.nio.charset.Charset;
 import java.util.regex.Pattern;
 
 /**
@@ -83,6 +85,7 @@ public class CathodeActivity extends Activity {
     int dbId;
     int dbDeviceType;
 
+    int smsProtocolType=0;
     private static long timerSmsCommandWaiting;
     private Handler handler = new Handler();
     private Runnable task = new Runnable() {
@@ -194,7 +197,28 @@ public class CathodeActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Send ASK SMS message
-                //sendSMS(mDevicePhoneNumber, "&SET?");
+                smsProtocolType = 0;
+                byte[] byteArrayToSend = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,43,44,45,46,47,48,49};
+
+                byte[] smsBody = "Let me know if you get this SMS".getBytes();
+                short port = 6734;
+                short port2 = 2345;
+                short port3 = 0;
+                //sendByteArrayAsSMS(mDevicePhoneNumber, byteArrayToSend);
+                sendByteArrayAsSMS(mDevicePhoneNumber, port, smsBody);
+                sendByteArrayAsSMS(mDevicePhoneNumber, port2, smsBody);
+                sendByteArrayAsSMS(mDevicePhoneNumber, port3, smsBody);
+                //sendByteArrayAsSMS("+79051815744", port2, smsBody);
+                //String string2 = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
+
+                sendSMS(mDevicePhoneNumber, new String(byteArrayToSend, Charset.forName("UTF-8")));
+                sendSMS(mDevicePhoneNumber, new String(byteArrayToSend, Charset.forName("US-ASCII")));
+
+                String original = new String("\u0001" + "\u0002"+ "\u0003"+ "\u0004" + "\u0005" + "\u0006" + "\u0007" +"\u0008" +"\u0009" +"\u00010" +
+                        "\u0011" + "\u0012"+ "\u0013"+ "\u0014" + "\u0015" + "\u0016" + "\u0017" +"\u0018" +"\u0019" +"\u00020" +
+                        "\u0021" + "\u0022"+ "\u0023"+ "\u0024" + "\u0025" + "\u0026" + "\u0027" +"\u0028" +"\u0029" +"\u00030" +
+                        "\u0031" + "\u0032"+ "\u0033"+ "\u0034" + "\u0035" + "\u0036" + "\u0037" +"\u0038" +"\u0039" +"\u00040");
+                sendSMS(mDevicePhoneNumber, original);
 
                 //Put param to shared preferences to wait answer from host
                 SharedPreferences.Editor editor = mSettings.edit();
@@ -232,27 +256,46 @@ public class CathodeActivity extends Activity {
         {
             String strSmsData = mSettings.getString(TEXT_SMS_AWAITING,"");
 
-            readSmsParameters(strSmsData);
+            int smsReceivedProtocolType = readSmsParameters(strSmsData);
             prog1.dismiss();
             //Вывсти сообщение, что параметры успешно обновлены
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             isSettingsRead = true;
 
 
-            //showParameters();
-            builder.setTitle("Получено новое состояние станции")
-                    .setMessage("Данные успешно обновлены и загружены")
-                    .setIcon(R.drawable.ic_action_error)
-                    .setCancelable(false)
-                    .setNegativeButton("ОК",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            timerSmsCommandWaiting = 0;
-            AlertDialog alert = builder.create();
-            alert.show();
+            if ((dbDeviceType==0 && smsReceivedProtocolType==2) ||
+                    (dbDeviceType==0 && smsReceivedProtocolType==2))
+            {
+                builder.setTitle("Получено новое состояние станции")
+                        .setMessage("Формат протокола не соотвествует типу станции, проведен парсинг")
+                        .setIcon(R.drawable.ic_action_error)
+                        .setCancelable(false)
+                        .setNegativeButton("ОК",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                timerSmsCommandWaiting = 0;
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            else {
+                //showParameters();
+                builder.setTitle("Получено новое состояние станции")
+                        .setMessage("Данные успешно обновлены и загружены")
+                        .setIcon(R.drawable.ic_action_accept)
+                        .setCancelable(false)
+                        .setNegativeButton("ОК",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                timerSmsCommandWaiting = 0;
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
 
         }
 
@@ -281,7 +324,7 @@ public class CathodeActivity extends Activity {
     }
 
 
-    public boolean readSmsParameters(String string){
+    public int readSmsParameters(String string){
 
 
         String mTimeDate = mSettings.getString(TEXT_TIMERECEIVED,"");
@@ -307,13 +350,7 @@ public class CathodeActivity extends Activity {
         int RsStatus=0;
         int RsType=0;
         String RsProgDate = "";
-        int RsAlarm1 = 0;
-        int RsAlarm2 = 0;
-        int RsAlarm3 = 0;
-        int RsAlarm4 = 0;
-        int RsAlarm5 = 0;
-        int RsAlarm6 = 0;
-        int RsAlarm7 = 0;
+
         int RsEnergyCntKoeff = 0;
         int isSkzWorking = 0;
         int isTermostatWorking = 0;
@@ -325,6 +362,7 @@ public class CathodeActivity extends Activity {
         long Svn2 = 0;
         //Получение данных
         if (Array[0]==0x01) {
+            smsProtocolType = 1;
             //Универсальный BTGV
             Uout = Array[1] * 256 + Array[2];
             Iout = Array[3] * 256 + Array[4];
@@ -344,6 +382,7 @@ public class CathodeActivity extends Activity {
         }
         else if (Array[0]==0x11)
         {
+            smsProtocolType = 2;
             //Интерфейсный BTGSM RS
             Uout = Array[1] * 256 + Array[2];
             Iout = Array[3] * 256 + Array[4];
@@ -370,13 +409,13 @@ public class CathodeActivity extends Activity {
 
             if ((RsStatus & (1<<0)) != 0) StabParam += 0x10;
 
-            RsAlarm1 = ((RsStatus & (1<<1)) != 0) ? 1 : 0;
-            RsAlarm2 = ((RsStatus & (1<<2)) != 0) ? 1 : 0;
-            RsAlarm3 = ((RsStatus & (1<<3)) != 0) ? 1 : 0;
-            RsAlarm4 = ((RsStatus & (1<<4)) != 0) ? 1 : 0;
-            RsAlarm5 = ((RsStatus & (1<<5)) != 0) ? 1 : 0;
-            RsAlarm6 = ((RsStatus & (1<<6)) != 0) ? 1 : 0;
-            RsAlarm7 = ((RsStatus & (1<<7)) != 0) ? 1 : 0;
+//            RsAlarm1 = ((RsStatus & (1<<1)) != 0) ? 1 : 0;
+//            RsAlarm2 = ((RsStatus & (1<<2)) != 0) ? 1 : 0;
+//            RsAlarm3 = ((RsStatus & (1<<3)) != 0) ? 1 : 0;
+//            RsAlarm4 = ((RsStatus & (1<<4)) != 0) ? 1 : 0;
+//            RsAlarm5 = ((RsStatus & (1<<5)) != 0) ? 1 : 0;
+//            RsAlarm6 = ((RsStatus & (1<<6)) != 0) ? 1 : 0;
+//            RsAlarm7 = ((RsStatus & (1<<7)) != 0) ? 1 : 0;
 
 
             isTermostatWorking = ((RsInputsOutputs & 0x10) != 0) ? 1 : 0;
@@ -399,26 +438,20 @@ public class CathodeActivity extends Activity {
 
         //Надо ли читать данные?
         values.put(DatabaseHelper.VAL_DATETIME_COLUMN, mTimeDate);
-        values.put(DatabaseHelper.VAL_U_COLUMN, String.valueOf(Uout));
-        values.put(DatabaseHelper.VAL_I_COLUMN, String.valueOf(Iout));
-        values.put(DatabaseHelper.VAL_P_COLUMN, String.valueOf(Upot));
+        values.put(DatabaseHelper.VAL_U_COLUMN, (Uout));
+        values.put(DatabaseHelper.VAL_I_COLUMN, (Iout));
+        values.put(DatabaseHelper.VAL_P_COLUMN, (Upot));
         values.put(DatabaseHelper.VAL_DOOR_COLUMN, isDoorEnable);
         values.put(DatabaseHelper.VAL_TC_COLUMN, isControlLocal);
-        values.put(DatabaseHelper.VAL_SVN1_COLUMN, String.valueOf(Svn1));
-        values.put(DatabaseHelper.VAL_SVN2_COLUMN, String.valueOf(Svn2));
-        values.put(DatabaseHelper.VAL_CNT_COLUMN, String.valueOf(EnergyCnt));
-        values.put(DatabaseHelper.VAL_220_COLUMN, String.valueOf(RsU220));
-        values.put(DatabaseHelper.VAL_TEMP_COLUMN, String.valueOf(Temp));
+        values.put(DatabaseHelper.VAL_SVN1_COLUMN, (Svn1));
+        values.put(DatabaseHelper.VAL_SVN2_COLUMN, (Svn2));
+        values.put(DatabaseHelper.VAL_CNT_COLUMN, (EnergyCnt));
+        values.put(DatabaseHelper.VAL_220_COLUMN, (RsU220));
+        values.put(DatabaseHelper.VAL_TEMP_COLUMN, (Temp));
         values.put(DatabaseHelper.VAL_HEATER_COLUMN, isTermostatWorking);
         values.put(DatabaseHelper.VAL_STAB_PARAM_COLUMN, StabParam);
-        values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, String.valueOf(StabValue));
-        values.put(DatabaseHelper.VAL_ALARM1_COLUMN, RsAlarm1);
-        values.put(DatabaseHelper.VAL_ALARM2_COLUMN, RsAlarm2);
-        values.put(DatabaseHelper.VAL_ALARM3_COLUMN, RsAlarm3);
-        values.put(DatabaseHelper.VAL_ALARM4_COLUMN, RsAlarm4);
-        values.put(DatabaseHelper.VAL_ALARM5_COLUMN, RsAlarm5);
-        values.put(DatabaseHelper.VAL_ALARM6_COLUMN, RsAlarm6);
-        values.put(DatabaseHelper.VAL_ALARM7_COLUMN, RsAlarm7);
+        values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, (StabValue));
+        values.put(DatabaseHelper.VAL_ALARMS_MASK_COLUMN, RsStatus);
 
         mSqLiteDatabase.update(DatabaseHelper.DATABASE_TABLE_CATHODES, values, "_id = ?",
                 new String[] {Integer.toString(dbId)});
@@ -427,7 +460,7 @@ public class CathodeActivity extends Activity {
 
         //Отобразить данные
         updateViewFromDatabase();
-        return false;
+        return smsProtocolType;
     }
 
 
@@ -495,6 +528,72 @@ public class CathodeActivity extends Activity {
 
     }
 
+
+    private void sendByteArrayAsSMS(String phoneNumber, short port, byte[] message)    {
+        String SENT="SMS_SENT";
+        String DELIVERED="SMS_DELIVERED";
+
+        PendingIntent sentPI= PendingIntent.getBroadcast(this,0,
+                new Intent(SENT),0);
+
+        PendingIntent deliveredPI= PendingIntent.getBroadcast(this,0,
+                new Intent(DELIVERED),0);
+
+        //---когда SMS отправлено---
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS Отправлено",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(getBaseContext(), "Ошибка отправки",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(getBaseContext(), "Сервис недоступен",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(getBaseContext(), "Null PDU",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(getBaseContext(), "Модем выключен",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+                unregisterReceiver(this);
+            }
+        }, new IntentFilter(SENT));
+
+        //---когда SMS доставлено---
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS Доставлено",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getBaseContext(), "SMS Не доставлено",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                unregisterReceiver(this);
+            }
+        }, new IntentFilter(DELIVERED));
+
+        SmsManager sms= SmsManager.getDefault();
+        sms.sendDataMessage(phoneNumber, null, port, message, sentPI, deliveredPI);
+
+    }
+
+
     public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
@@ -526,6 +625,10 @@ public class CathodeActivity extends Activity {
             mTextViewCathodeText.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.INFO_COLUMN)));
             dbDeviceType = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.DEVICE_COLUMN));
 
+
+            int uiTemp;
+            long ulTemp;
+
             if (dbDeviceType==0)
             {
                 //Универсальный
@@ -538,6 +641,22 @@ public class CathodeActivity extends Activity {
                 mLinearLayoutCathodeStabRs.setVisibility(View.GONE);
                 mLinearLayoutCathodeStabUnivers.setVisibility(View.VISIBLE);
 
+
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/1024;
+                mTextViewValU.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/1024;
+                mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/1024;
+                mTextViewValP.setText(String.valueOf(uiTemp/100) + "."+String.valueOf(uiTemp%100));
+
+                if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_SCALE_COLUMN))>0) ulTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_BEGIN_COLUMN))*10 + (int)(((float)(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN))*10))/(float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_SCALE_COLUMN)));
+                else ulTemp=0;
+                mTextViewValCnt.setText(String.valueOf(ulTemp/10) + "."+String.valueOf(ulTemp%10));
+
+
             }
             else
             {
@@ -548,16 +667,25 @@ public class CathodeActivity extends Activity {
                 mLinearLayoutCathodeAlarms.setVisibility(View.VISIBLE);
                 mLinearLayoutCathodeStabRs.setVisibility(View.VISIBLE);
                 mLinearLayoutCathodeStabUnivers.setVisibility(View.GONE);
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN));
+                mTextViewValU.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN));
+                mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN));
+                mTextViewValP.setText(String.valueOf(uiTemp/100) + "."+String.valueOf(uiTemp%100));
+
+                ulTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN));
+                mTextViewValCnt.setText(String.valueOf(ulTemp/10) + "."+String.valueOf(ulTemp%10));
             }
 
 
 
             //Последние показания станции
             mTextViewValDateTime.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_DATETIME_COLUMN)));
-            mTextViewValU.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN )));
-            mTextViewValI.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN )));
-            mTextViewValP.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN )));
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_DOOR_COLUMN  ))==0)
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_DOOR_COLUMN))==0)
             {
                 //дверь закрыта
                 mTextViewValDoor.setText("ДВЕРЬ ЗАКРЫТА");
@@ -583,11 +711,18 @@ public class CathodeActivity extends Activity {
                 mTextViewValTc.setTextColor(getResources().getColor(R.color.red));
             }
 
-            mTextViewValSvn1.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_SVN1_COLUMN))));
-            mTextViewValSvn2.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_SVN2_COLUMN))));
-            mTextViewValCnt.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN))));
+            long SvnTemp = 0;
+            SvnTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_SVN1_COLUMN));
+            mTextViewValSvn1.setText(String.valueOf(SvnTemp/10)+"."+String.valueOf(SvnTemp%10));
+
+            SvnTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_SVN2_COLUMN));
+            mTextViewValSvn2.setText(String.valueOf(SvnTemp/10)+"."+String.valueOf(SvnTemp%10));
+
             mTextViewVal220V.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_220_COLUMN))));
-            mTextViewValtemp.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_TEMP_COLUMN))));
+
+            int TempTemp=0;
+            TempTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_TEMP_COLUMN));
+            mTextViewValtemp.setText(String.valueOf(TempTemp));
 
             if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_HEATER_COLUMN ))==0)
             {
@@ -605,8 +740,10 @@ public class CathodeActivity extends Activity {
 
 
 
-            mTextViewValStabRs.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN )));
-            mTextViewValStabUniver.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN )));
+            uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
+            mTextViewValStabRs.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+            mTextViewValStabUniver.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN))));
 
             switch (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_PARAM_COLUMN)) & 0x0F)
             {
@@ -616,43 +753,51 @@ public class CathodeActivity extends Activity {
                 default: mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
             }
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM1_COLUMN))==0)
+            byte tsStatus = (byte)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARMS_MASK_COLUMN));
+            //((RsStatus & (1<<1)) != 0)
+
+            // Стабилизация
+            if ((tsStatus & (1<<1)) !=0) mTextViewValStabRs.setTextColor(getResources().getColor(R.color.green));
+            else mTextViewValStabRs.setTextColor(getResources().getColor(R.color.red));
+
+
+            if ((tsStatus & (1<<1)) ==0)
                 mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM2_COLUMN))==0)
+            if ((tsStatus & (1<<2)) ==0)
                 mImageViewAlarm2.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm2.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM3_COLUMN))==0)
+            if ((tsStatus & (1<<3)) ==0)
                 mImageViewAlarm3.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm3.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM4_COLUMN))==0)
+            if ((tsStatus & (1<<4)) ==0)
                 mImageViewAlarm4.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm4.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM5_COLUMN))==0)
+            if ((tsStatus & (1<<5)) ==0)
                 mImageViewAlarm5.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm5.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM6_COLUMN))==0)
+            if ((tsStatus & (1<<6)) ==0)
                 mImageViewAlarm6.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm6.setImageBitmap(BitmapFactory.decodeResource(
                     this.getResources(), R.drawable.led_green));
 
-            if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARM7_COLUMN))==0)
+            if ((tsStatus & (1<<7)) ==0)
                 mImageViewAlarm7.setImageBitmap(BitmapFactory.decodeResource(
                         this.getResources(), R.drawable.led_gray));
             else mImageViewAlarm7.setImageBitmap(BitmapFactory.decodeResource(

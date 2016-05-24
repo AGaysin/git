@@ -202,7 +202,7 @@
 
                             <RadioButton
                                 android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:text="0...5 В"
                                 android:id="@+id/radioButton05V"
                                 android:layout_weight="1"
@@ -211,12 +211,13 @@
 
                             <RadioButton
                                 android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:text="4...20 мА"
                                 android:id="@+id/radioButton420mA"
                                 android:checked="false"
                                 android:layout_weight="1"
-                                android:enabled="true" />
+                                android:enabled="true"
+                                android:longClickable="false" />
                         </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
@@ -295,59 +296,59 @@
                         android:enabled="true"
                         android:maxLength="1" />
                 </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Коэфф. пересчета эл/сч."
+                        android:id="@+id/textView9" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:editable="true"
+                        android:ems="10"
+                        android:id="@+id/editTextCntScale"
+                        android:text="4200"
+                        android:enabled="true"
+                        android:maxLength="5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Начальное показание эл/сч"
+                        android:id="@+id/textView10" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:editable="true"
+                        android:ems="10"
+                        android:id="@+id/editTextCntBegin"
+                        android:text="0"
+                        android:enabled="true"
+                        android:maxLength="10" />
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Коэфф. пересчета эл/сч."
-                    android:id="@+id/textView9" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:editable="true"
-                    android:ems="10"
-                    android:id="@+id/editTextCntScale"
-                    android:text="4200"
-                    android:enabled="true"
-                    android:maxLength="5" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Начальное показание эл/сч"
-                    android:id="@+id/textView10" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:editable="true"
-                    android:ems="10"
-                    android:id="@+id/editTextCntBegin"
-                    android:text="0"
-                    android:enabled="true"
-                    android:maxLength="10" />
-            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"

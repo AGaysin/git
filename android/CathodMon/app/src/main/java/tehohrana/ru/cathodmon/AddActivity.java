@@ -267,11 +267,11 @@ public class AddActivity extends Activity {
         values.put(DatabaseHelper.INFO_COLUMN, mEditTextAddInfo.getText().toString());
         values.put(DatabaseHelper.DEVICE_COLUMN, mSpinnerAddDeviceType.getSelectedItemPosition());
         values.put(DatabaseHelper.SIGNAL_COOLUMN, mRadioButtonAdd05V.isChecked() ? 1:0);
-        values.put(DatabaseHelper.IMAX_COLUMN, mEditTextAddImax.getText().toString());
-        values.put(DatabaseHelper.UMAX_COLUMN, mEditTextAddUmax.getText().toString());
-        values.put(DatabaseHelper.FIMAX_COLUMN, mEditTextAddFimax.getText().toString());
-        values.put(DatabaseHelper.CNT_BEGIN_COLUMN, mEditTextAddCntBegin.getText().toString());
-        values.put(DatabaseHelper.CNT_SCALE_COLUMN, mEditTextAddCntScale.getText().toString());
+        values.put(DatabaseHelper.IMAX_COLUMN, Integer.parseInt(mEditTextAddImax.getText().toString()));
+        values.put(DatabaseHelper.UMAX_COLUMN, Integer.parseInt(mEditTextAddUmax.getText().toString()));
+        values.put(DatabaseHelper.FIMAX_COLUMN, Integer.parseInt(mEditTextAddFimax.getText().toString()));
+        values.put(DatabaseHelper.CNT_BEGIN_COLUMN, Integer.parseInt(mEditTextAddCntBegin.getText().toString()));
+        values.put(DatabaseHelper.CNT_SCALE_COLUMN, Integer.parseInt(mEditTextAddCntScale.getText().toString()));
 
 
         if (isEdit)
@@ -307,26 +307,21 @@ public class AddActivity extends Activity {
         else {
 
             values.put(DatabaseHelper.VAL_DATETIME_COLUMN, "--.--.--/--:--:--");
-            values.put(DatabaseHelper.VAL_U_COLUMN, "--.-");
-            values.put(DatabaseHelper.VAL_I_COLUMN, "--.-");
-            values.put(DatabaseHelper.VAL_P_COLUMN, "-.--");
+            values.put(DatabaseHelper.VAL_U_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_I_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_P_COLUMN, 0);
             values.put(DatabaseHelper.VAL_DOOR_COLUMN, 0);
             values.put(DatabaseHelper.VAL_TC_COLUMN, 0);
             values.put(DatabaseHelper.VAL_SVN1_COLUMN, 0);
             values.put(DatabaseHelper.VAL_SVN2_COLUMN, 0);
             values.put(DatabaseHelper.VAL_CNT_COLUMN, 0);
             values.put(DatabaseHelper.VAL_220_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_TEMP_COLUMN, "--");
+            values.put(DatabaseHelper.VAL_TEMP_COLUMN, 0);
             values.put(DatabaseHelper.VAL_HEATER_COLUMN, 0);
             values.put(DatabaseHelper.VAL_STAB_PARAM_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, "--.-");
-            values.put(DatabaseHelper.VAL_ALARM1_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_ALARM2_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_ALARM3_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_ALARM4_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_ALARM5_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_ALARM6_COLUMN, 0);
-            values.put(DatabaseHelper.VAL_ALARM7_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_STAB_VAL_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_ALARMS_MASK_COLUMN, 0);
+            values.put(DatabaseHelper.VAL_STAB_OK_COLUMN, 0);
 
             // Вставляем данные в таблицу
             mSqLiteDatabase.insert(DatabaseHelper.DATABASE_TABLE_CATHODES, null, values);
