@@ -3,9 +3,11 @@ package tehohrana.ru.cathodmon;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -30,12 +32,19 @@ public class LoginActivity extends Activity {
     TextView mTextViewPass4;
     Vibrator mVibrator;
 
+    int mPassword;
+    boolean isAskPassword;
+    public SharedPreferences mSettings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mPinPosition = 0;
         mPinValue = 0;
+
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+
         mTextViewPass1 = (TextView) findViewById(R.id.textViewPass1);
         mTextViewPass2 = (TextView) findViewById(R.id.textViewPass2);
         mTextViewPass3 = (TextView) findViewById(R.id.textViewPass3);
@@ -46,10 +55,21 @@ public class LoginActivity extends Activity {
         mTextViewPass4.setTextColor(getResources().getColor(R.color.light_gray));
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+        isAskPassword = mSettings.getBoolean("key_pass_enable",false);
+        mPassword = Integer.parseInt(mSettings.getString("key_pass_value","1234"));
+
+
 
         if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean("EXIT", false)) {
             finish();
         }
+        else if (!isAskPassword)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            this.startActivity(intent);
+        }
+
+
     }
 
 
@@ -144,7 +164,7 @@ public class LoginActivity extends Activity {
             case 3:
                 mPinValue += 1*key;
                 mTextViewPass4.setTextColor(getResources().getColor(R.color.light_blue));
-                if (mPinValue == 1234)
+                if (mPinValue == mPassword)
                 {
 
 

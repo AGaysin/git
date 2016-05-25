@@ -52,6 +52,16 @@
             android:theme="@style/AppTheme.NoActionBar">
             <uses-permission android:name="android.permission.CALL_PHONE" />
         </activity>
+        <activity
+            android:name=".Prefs"
+            android:theme="@android:style/Theme.Holo"
+            android:label="Настройки приложения" >
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:theme="@android:style/Theme.Holo.Dialog"
+            android:label="О программе" >
+        </activity>
 
     </application>
     <uses-permission android:name="android.permission.VIBRATE"/>
