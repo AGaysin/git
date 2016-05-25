@@ -368,10 +368,10 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
 
             if ((dbDeviceType==0 && smsReceivedProtocolType==2) ||
-                    (dbDeviceType==0 && smsReceivedProtocolType==2))
+                    (dbDeviceType==1 && smsReceivedProtocolType==1))
             {
                 builder.setTitle("Получено новое состояние станции")
-                        .setMessage("Формат протокола не соотвествует типу станции, проведен парсинг")
+                        .setMessage("Формат протокола не соотвествует типу станции !")
                         .setIcon(R.drawable.ic_action_error)
                         .setCancelable(false)
                         .setNegativeButton("ОК",
@@ -466,7 +466,9 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         long Svn2 = 0;
         //Получение данных
         if (Array[0]==0x01) {
+
             smsProtocolType = 1;
+            if (dbDeviceType != 0) return 1;
             //Универсальный BTGV
             Uout = Array[1] * 256 + Array[2];
             Iout = Array[3] * 256 + Array[4];
@@ -487,6 +489,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         else if (Array[0]==0x11)
         {
             smsProtocolType = 2;
+            if (dbDeviceType != 1) return 2;
             //Интерфейсный BTGSM RS
             Uout = Array[1] * 256 + Array[2];
             Iout = Array[3] * 256 + Array[4];
