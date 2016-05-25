@@ -288,6 +288,11 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
     public void onBtnCathodeCallClick(View view) {
 
+        Intent intent = new Intent(Intent.ACTION_CALL);
+
+        intent.setData(Uri.parse("tel:+" + mDevicePhoneNumber));
+        this.startActivity(intent);
+
     }
 
     public void onBtnCathodeAskSmsClick(View view) {
