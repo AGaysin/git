@@ -46,6 +46,10 @@ public class LoginActivity extends Activity {
         mTextViewPass4.setTextColor(getResources().getColor(R.color.light_gray));
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean("EXIT", false)) {
+            finish();
+        }
     }
 
 
@@ -142,6 +146,7 @@ public class LoginActivity extends Activity {
                 mTextViewPass4.setTextColor(getResources().getColor(R.color.light_blue));
                 if (mPinValue == 1234)
                 {
+
 
                     Intent intent = new Intent(this, MainActivity.class);
                     this.startActivity(intent);
