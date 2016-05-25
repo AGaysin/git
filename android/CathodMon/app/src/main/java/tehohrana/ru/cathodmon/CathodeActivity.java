@@ -132,6 +132,8 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         mRadioButtonP = (RadioButton)findViewById(R.id.radioButtonControlSetP);
         mRadioGroupControlSet = (RadioGroup)findViewById(R.id.radioGroupControlSet);
 
+
+
         mRadioGroupControlSet.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -139,14 +141,14 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
                 if (mRadioButtonI.isChecked())
                 {
-                    mControlSetParam = 1;
+                    mControlSetParam = 2;
                     mSeekBarControlSetValue.setMax(990);
                     mTextViewControlSetValue.setText("Установите величину выходного тока, А");
 
                 }
                 else if (mRadioButtonU.isChecked())
                 {
-                    mControlSetParam = 2;
+                    mControlSetParam = 1;
                     mSeekBarControlSetValue.setMax(990);
                     mTextViewControlSetValue.setText("Установите величину выхоного напряжения, В");
 
@@ -174,6 +176,37 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         mEditTextControlSetValue = (EditText)findViewById(R.id.editTextControlSetValue);
         mSeekBarControlSetValue = (SeekBar)findViewById(R.id.seekBarControlSetValue);
 
+        mEditTextControlSetValue.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                float floatValue;
+                try {
+                    floatValue = Float.parseFloat(mEditTextControlSetValue.getText().toString());
+
+                    Integer intVaue;
+                    switch (mControlSetParam) {
+                        case 0:
+                            intVaue = Math.round(floatValue);
+                            mSeekBarControlSetValue.setProgress(intVaue);
+                            break;
+                        case 1:
+                        case 2:
+                            intVaue = Math.round(floatValue * 10);
+                            mSeekBarControlSetValue.setProgress(intVaue);
+                            break;
+                        case 3:
+                            intVaue = Math.round(floatValue * 100);
+                            mSeekBarControlSetValue.setProgress(intVaue);
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Toast.makeText(getBaseContext(),"Error parsing float to int: " + ex.toString(),Toast.LENGTH_LONG).show();
+                }
+                return false;
+            }
+        });
         mSeekBarControlSetValue.setOnSeekBarChangeListener(this);
 
 
@@ -212,6 +245,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         mLinearLayoutControlSet.setVisibility(View.GONE);
 
         updateViewFromDatabase();
+
 
 
 
@@ -263,10 +297,10 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
             {
                 case 1:
                 case 2:
-                    mEditTextControlSetValue.setText(String.valueOf(progress/10)+","+String.valueOf(progress%10));
+                    mEditTextControlSetValue.setText(String.valueOf(progress/10)+"."+String.valueOf(progress%10));
                     break;
                 case 3:
-                    mEditTextControlSetValue.setText(String.valueOf(progress/100)+","+String.valueOf(progress%100));
+                    mEditTextControlSetValue.setText(String.valueOf(progress/100)+"."+String.valueOf(progress%100));
                     break;
             }
         }
@@ -738,6 +772,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
             if (dbDeviceType==0)
             {
+                mControlSetParam = 0;
                 //Универсальный
                 if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.SIGNAL_COOLUMN))==0)
                     mTextViewCathodeType.setText("Универсальный (4-20 мА)");
@@ -751,18 +786,27 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
 
                 uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/1024;
-                mTextViewValU.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+                mTextViewValU.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
 
                 uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/1024;
                 mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
 
                 uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/1024;
-                mTextViewValP.setText(String.valueOf(uiTemp/100) + "."+String.valueOf(uiTemp%100));
+                mTextViewValP.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
 
                 if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_SCALE_COLUMN))>0) ulTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_BEGIN_COLUMN))*10 + (int)(((float)(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN))*10))/(float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_SCALE_COLUMN)));
                 else ulTemp=0;
                 mTextViewValCnt.setText(String.valueOf(ulTemp/10) + "."+String.valueOf(ulTemp%10));
 
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
+                        mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
+                        mControlSetParam = 0;
+                        mSeekBarControlSetValue.setMax(100);
+                        mTextViewControlSetValue.setText("Установите величину управления, %");
+                        mSeekBarControlSetValue.setProgress(uiTemp);
+                        mEditTextControlSetValue.setText(String.valueOf(uiTemp));
+                        mTextViewValStabUniver.setText(String.valueOf(uiTemp));
 
             }
             else
@@ -786,6 +830,44 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
                 ulTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN));
                 mTextViewValCnt.setText(String.valueOf(ulTemp/10) + "."+String.valueOf(ulTemp%10));
+
+
+                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
+
+
+
+                switch (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_PARAM_COLUMN)) & 0x0F)
+                {
+                    case 1:
+                        mButtonValStabParam.setText("Напряжение, В (Изменить)");
+                        mControlSetParam = 1;
+                        mSeekBarControlSetValue.setMax(990);
+                        mTextViewControlSetValue.setText("Установите величину выходного напряжения, В");
+                        mSeekBarControlSetValue.setProgress(uiTemp);
+                        mEditTextControlSetValue.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
+                        mTextViewValStabRs.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+                        break;
+                    case 2:
+                        mButtonValStabParam.setText("Ток, А (Изменить)");
+                        mControlSetParam = 2;
+                        mSeekBarControlSetValue.setMax(990);
+                        mTextViewControlSetValue.setText("Установите величину выходного тока, А");
+                        mSeekBarControlSetValue.setProgress(uiTemp);
+                        mEditTextControlSetValue.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
+                        mTextViewValStabRs.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+                        break;
+                    case 3:
+                        mButtonValStabParam.setText("Потенциал, В (Изменить)");
+                        mControlSetParam = 3;
+                        mSeekBarControlSetValue.setMax(500);
+                        mTextViewControlSetValue.setText("Установите величину защитного потенциала, В");
+                        mSeekBarControlSetValue.setProgress(uiTemp);
+                        mEditTextControlSetValue.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
+                        mTextViewValStabRs.setText(String.valueOf(uiTemp/100) + "."+String.valueOf(uiTemp%100));
+                        break;
+
+                }
+
             }
 
 
@@ -847,18 +929,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
 
 
-            uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
-            mTextViewValStabRs.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
 
-            mTextViewValStabUniver.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN))));
-
-            switch (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_PARAM_COLUMN)) & 0x0F)
-            {
-                case 1: mButtonValStabParam.setText("Напряжение, В (Изменить)"); break;
-                case 2: mButtonValStabParam.setText("Ток, А (Изменить)"); break;
-                case 3: mButtonValStabParam.setText("Потенциал, В (Изменить)"); break;
-                default: mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
-            }
 
             byte tsStatus = (byte)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_ALARMS_MASK_COLUMN));
             //((RsStatus & (1<<1)) != 0)
@@ -936,7 +1007,11 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                 if (dbDeviceType==0)
                 {
                     //03XXXX00
-                    String s = "\u0300" + Character.toString((char)(valueSet<<8));
+                    int valSend = (1023*valueSet)/100;
+                    char valSendByte1 = (char)(valSend/256);
+                    char valSendByte2 = (char)(valSend%256);
+                    //String s = "\u0300" + Character.toString((char)(valueSet<<8));
+                    String s = Character.toString((char)(0x0300 | valSendByte1)) + Character.toString((char)(valSendByte2<<8));
                     sendSMS(mDevicePhoneNumber, s);
                 }
                 else
