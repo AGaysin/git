@@ -9,6 +9,8 @@
             android:title="Пароль(4 цифры)"
             android:summary="Для ограничения прав доступа к приложению"
             android:defaultValue="1234"
+            android:maxLength="4"
+            android:ems="4"
             android:inputType="phone"
             android:dialogTitle="Введите пароль(4 цифры)" />
 
