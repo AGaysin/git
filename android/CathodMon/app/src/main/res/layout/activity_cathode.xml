@@ -10,8 +10,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
+        android:layout_height="50dp"
         android:background="@color/red">
 
         <LinearLayout
@@ -829,8 +828,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
+        android:layout_height="50dp"
         android:layout_gravity="center_vertical"
         android:background="@color/gray_light">
 
