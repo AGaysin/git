@@ -31,7 +31,10 @@ unsigned int secondTrackTimer=0;
 unsigned char buttonEnable=1;
 unsigned int buttonEnTimer=0;
 unsigned int isNowPlaying=0;
+unsigned char isSirenTrack=0;
 uint8_t buttonOldPosition;
+unsigned int CheckReadyCounter;
+unsigned char isCardReady=0;
 volatile BYTE FifoRi, FifoWi, FifoCt;	/* FIFO controls */
 
 BYTE Buff[64];		/* Wave output FIFO */
@@ -90,13 +93,21 @@ unsigned int j=1000;
               //GPIO_SetBits(GPIOB, GPIO_Pin_9);
               //GPIO_SetBits(GPIOC, GPIO_Pin_14);
 
-#define VIDEO_PLAY_1    V1_OFF;V2_ON;V3_ON;
-#define VIDEO_PLAY_2    V1_ON;V2_OFF;V3_ON;
-#define VIDEO_SIRENA    V1_OFF;V2_OFF;V3_ON;
-#define VIDEO_NEXT_2    V1_ON;V2_ON;V3_OFF;
-#define VIDEO_NEXT_S    V1_OFF;V2_ON;V3_OFF;
-#define VIDEO_CLR       V1_OFF;V2_OFF;V3_OFF;
-#define VIDEO_RELAY     V1_ON;V2_OFF;V3_OFF;
+#define VIDEO_PLAY_1    V1_OFF;V2_ON;V3_ON;V4_ON;  	//1
+#define VIDEO_PLAY_2    V1_ON;V2_OFF;V3_ON;V4_ON; 	//2
+#define VIDEO_SIRENA    V1_OFF;V2_OFF;V3_ON;V4_ON;	//3
+#define VIDEO_NEXT_2    V1_ON;V2_ON;V3_OFF;V4_ON;	//4
+#define VIDEO_NEXT_S    V1_OFF;V2_ON;V3_OFF;V4_ON;	//5
+#define VIDEO_RELAY     V1_ON;V2_OFF;V3_OFF;V4_ON;	//6
+#define VIDEO_CLR       V1_OFF;V2_OFF;V3_OFF;V4_ON;	//7
+
+
+#define VIDEO_NEXT_S1   V1_OFF;V2_ON;V3_ON;V4_OFF;	//9
+#define VIDEO_NEXT_S2   V1_ON;V2_OFF;V3_ON;V4_OFF;	//10
+#define VIDEO_NOSD      V1_OFF;V2_OFF;V3_ON;V4_OFF;	//11
+
+#define VIDEO_PLAY_S1   V1_ON;V2_ON;V3_OFF;V4_OFF;	//12
+#define VIDEO_PLAY_S2   V1_OFF;V2_ON;V3_OFF;V4_OFF;	//13
 
 #define MMC_POWER_ON    GPIO_ResetBits(GPIOC, GPIO_Pin_14)
 #define MMC_POWER_OFF   GPIO_SetBits(GPIOC, GPIO_Pin_14)
@@ -306,10 +317,36 @@ int main(void)
   SOUND_DISABLE;
   LED_POWER_ON;
   buttonOldPosition = PLAY_BTN;
-              LED_READY_ON;
+              //LED_READY_ON;
+  CheckReadyCounter=0;
               LED_PLAY_OFF;
               LED_SIRENA_OFF;
 for (;;) {
+  
+
+  if (CheckReadyCounter<10000) CheckReadyCounter++;
+  else 
+  {
+    CheckReadyCounter=0;
+    if (pf_mount(&Fs) == FR_OK)
+    {
+      if (isCardReady==0)  
+      {
+        secondTrack = 0;
+        VIDEO_CLR;
+      }
+      isCardReady = 1;
+      LED_READY_ON;
+      
+    }
+    else
+    {
+      isCardReady = 0;
+      LED_READY_OFF;
+      VIDEO_NOSD;
+      
+    }
+  }
 
   if (TEST_BTN==Bit_RESET)
   {
@@ -330,16 +367,31 @@ for (;;) {
           res = pf_readdir(&Dir, &Fno);		// Get a dir entry 
           if (res || !Fno.fname[0]) break;	// Break on error or end of dir
           
-
-              VIDEO_PLAY_1;
-              res = play("ALARM/1.WAV");
-              VIDEO_NEXT_2;
-          delay_ms(2000);
+          
+          VIDEO_PLAY_1;
+          res = play("ALARM/1.WAV");
+          VIDEO_RELAY;
+          delay_ms(10000);
+          VIDEO_NEXT_2;
+          delay_ms(10000);
           VIDEO_PLAY_2;
           res = play("ALARM/2.WAV");
-          asm("NOP");
+          VIDEO_RELAY;
+          delay_ms(10000);
+          VIDEO_NEXT_S1;
+          delay_ms(10000);
+          VIDEO_PLAY_S1;
+          res = play("ALARM/3.WAV");
+          VIDEO_RELAY;
+          delay_ms(10000);
+          VIDEO_NEXT_S2;
+          delay_ms(10000);
+          VIDEO_PLAY_S2;
+          SIRENA_OUT_ON;
+          delay_ms(10000);
+          SIRENA_OUT_OFF;
           VIDEO_NEXT_S;
-          delay_ms(2000);
+          delay_ms(10000);
           VIDEO_SIRENA;
           SIRENA_OUT_ON;
           delay_ms(10000);
@@ -360,7 +412,6 @@ for (;;) {
     {
     
     asm("NOP");
-    if (NoFiles<10) NoFiles++;
     if (pf_mount(&Fs) == FR_OK) {	// Initialize FS
       Buff[0] = 0;
       
@@ -379,44 +430,71 @@ for (;;) {
           if (1)//!(Fno.fattrib & (AM_DIR|AM_HID)) && strstr(Fno.fname, ".WAV"))
           {
             asm("NOP");
-            //res = play("SINE/8.WAV");
             isNowPlaying = 1;
-            NoFiles = 0;
             if (secondTrack == 0) 
             {
               //Track1
               VIDEO_PLAY_1;
-              //GPIO_ResetBits(GPIOB, GPIO_Pin_8);
-              //GPIO_ResetBits(GPIOB, GPIO_Pin_9);
-              //GPIO_SetBits(GPIOC, GPIO_Pin_14);
-              res = play("ALARM/1.WAV");		// Play file 
-              secondTrackTimer = 6000; //5min timeout
-      secondTrack = 1;
+              res = play("ALARM/1.WAV");
+              //show RELAY untill RELAY_ON
+              VIDEO_RELAY;
+              while(PLAY_BTN==Bit_RESET) asm("NOP");
+              //Next Play2
+              VIDEO_NEXT_2;
+              secondTrack = 1;
             }
             else if (secondTrack == 1) 
             {
               //Track2
               VIDEO_PLAY_2;
-              //GPIO_ResetBits(GPIOB, GPIO_Pin_8);
-              //GPIO_SetBits(GPIOB, GPIO_Pin_9);
-              //GPIO_ResetBits(GPIOC, GPIO_Pin_14);
               res = play("ALARM/2.WAV");
-              secondTrackTimer = 6000;
-      secondTrack = 2;
+              //show RELAY untill RELAY_ON
+              VIDEO_RELAY;
+              while(PLAY_BTN==Bit_RESET) asm("NOP");
+              
+              res = pf_open("ALARM/3.WAV");
+              if (res == FR_OK)
+              {
+                //выводить NEXT_S1
+                VIDEO_NEXT_S1;
+                secondTrack = 2;
+              }
+              else
+              {
+                //выводить NEXT_S
+                VIDEO_NEXT_S;
+                secondTrack = 4;
+              }
             }
-            //else if (secondTrack == 2) res = play("ALARM/3.WAV");
-            else 
+            else if (secondTrack == 2) 
+            {
+              VIDEO_PLAY_S1;
+              res = play("ALARM/3.WAV");
+              //show RELAY untill RELAY_ON
+              VIDEO_RELAY;
+              while(PLAY_BTN==Bit_RESET) asm("NOP");
+              //выводить NEXT_S2
+                VIDEO_NEXT_S2;
+              secondTrack = 3;
+            }
+            else if (secondTrack == 3)
+            {
+              VIDEO_PLAY_S2;
+              SIRENA_OUT_ON; 
+              while(PLAY_BTN==Bit_RESET) asm("NOP");
+              SIRENA_OUT_OFF; 
+              VIDEO_NEXT_S2;
+            }
+            else
             {
               //Sirena
               VIDEO_SIRENA;
-              //GPIO_ResetBits(GPIOB, GPIO_Pin_8);
-              //GPIO_SetBits(GPIOB, GPIO_Pin_9);
-              //GPIO_SetBits(GPIOC, GPIO_Pin_14);
-              //res = play("ALARM/2.WAV");
-              SIRENA_OUT_ON; //GPIO_SetBits(GPIOB, GPIO_Pin_14);
-              secondTrackTimer = 6000;
-      secondTrack = 3;
+              SIRENA_OUT_ON; 
+              while(PLAY_BTN==Bit_RESET) asm("NOP");
+              SIRENA_OUT_OFF; 
+              VIDEO_NEXT_S;
             }
+            secondTrackTimer = 6000;
           }
           asm("NOP");
         }
@@ -424,64 +502,22 @@ for (;;) {
       
     }
     
-    if (NoFiles>=3)
+    if (isCardReady == 0)
     {
       VIDEO_SIRENA;
       SIRENA_OUT_ON; //GPIO_SetBits(GPIOB, GPIO_Pin_14);
-      secondTrackTimer = 6000;
-      secondTrack = 3;
-    }
+      while(PLAY_BTN==Bit_RESET) asm("NOP");
+      SIRENA_OUT_OFF;
+      VIDEO_CLR;
+      
+   }
+    
+    
     //relay
     isNowPlaying = 0;
     buttonEnable=0;
     buttonEnTimer=1200; //1 min timeout
-    
-    
-
-
-    
-        //red on
-    //GPIO_SetBits(GPIOB, GPIO_Pin_10);
-    //green off
-    //GPIO_ResetBits(GPIOB, GPIO_Pin_1);
-    if (secondTrack <=2) 
-    {
-      //wait >>2
-      VIDEO_RELAY;
-      
-    }
-    while(PLAY_BTN==Bit_RESET)
-    {
-      asm("NOP");
-    }
-    //Oaeia? aey aini?iecaaaaiee aoi?iai o?aea
-    
-    //Spot Siren
-    SIRENA_OUT_OFF; //GPIO_ResetBits(GPIOB, GPIO_Pin_14);
-      buttonEnable = 1;  
-      //red off
-      //GPIO_ResetBits(GPIOB, GPIO_Pin_10);
-      // green on
-      //GPIO_SetBits(GPIOB, GPIO_Pin_1);
-      
-      
-    if (secondTrack <=1) 
-    {
-      //wait >>2
-      VIDEO_NEXT_2;
-      
-    }
-    else 
-    {
-            //wait >>2
-      VIDEO_NEXT_S;
-
-      
-    }
-    
-    buttonEnable=1;
-    //buttonEnTimer=1200; //1 min timeout
-    //busy state
+    buttonEnable = 1;  
     
     }
 
@@ -709,40 +745,23 @@ void TIM3_IRQHandler(void){
   //50ms intervals
   TIM3->SR &= ~TIM_SR_UIF; //—брасываем флаг UIF
   
+
   if (isNowPlaying)
   {
-    //red off
-    LED_READY_OFF;
-   // GPIO_ResetBits(GPIOB, GPIO_Pin_10);
-    //green blinking
-    //if (GPIO_ReadOutputDataBit(GPIOB, GPIO_Pin_1) == Bit_RESET) GPIO_SetBits(GPIOB, GPIO_Pin_1);
-    //else GPIO_ResetBits(GPIOB, GPIO_Pin_1);
+    
   }
   else
   {
-    LED_READY_ON;
-  
-
-  
   if (secondTrackTimer)
   {
     if (secondTrackTimer-- == 1) 
     {
-            //clear all
       VIDEO_CLR;
-             // GPIO_ResetBits(GPIOB, GPIO_Pin_8);
-              //GPIO_ResetBits(GPIOB, GPIO_Pin_9);
-              //GPIO_ResetBits(GPIOC, GPIO_Pin_14);
-
-              
       secondTrack = 0;
-      //red off
-      //GPIO_ResetBits(GPIOB, GPIO_Pin_10);
-      // green off
-      //GPIO_ResetBits(GPIOB, GPIO_Pin_1);
     }
   }
   }
+
   asm("NOP");
   
 }
