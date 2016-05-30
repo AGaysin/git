@@ -43,16 +43,7 @@ unsigned char maindelay;				/* State of mainDelay function				*/
 unsigned int ltemp;						/* State of Delay function						*/
 unsigned int ntemp;						/* State of Delay function						*/
 
-unsigned char head[14] = {'N','4','T','X','I','@','B','A','L','L','O','O','N','@'};
 
-unsigned char spd[3] = {'1','6','7'};
-unsigned char hdg[3] = {'2','8','9'};
-
-unsigned char time[6] = {'1','4','5','4','4','6'};
-unsigned char date[6] = {'1','2','2','5','0','4'};
-
-unsigned char lat[9] = {'@','3','4','3','5','.','6','8','N'};
-unsigned char lon[9] = {'0','8','9','1','8','.','7','5','W'};
 unsigned char sleep_cmd=0;
 
 unsigned char ltrs_inv[189];
@@ -85,6 +76,7 @@ unsigned char play2_en=0;
 unsigned char relay=0;
 unsigned char next2=0;
 unsigned char nextS=0;
+unsigned char play_s1=0, play_s2=0, next_s1=0, next_s2=0, nosdcard=0;
 
 
 #define led_on PORTD &= ~(1<<4);
@@ -188,74 +180,63 @@ cam_off;
 			
 			//Реле замкнуто
 			read_reg = PINA>>1;
-			read_reg &= 0x07;
-			//read_reg=2;
+			read_reg &= 0x0F;
+			
+			play1_en=0;
+			relay=0;
+			next2=0;
+			play2_en=0;
+			nextS=0;
+			sirena_en=0;
+			play_s1 = 0;
+			play_s2 = 0;
+			next_s1 = 0;
+			next_s2 = 0;
+			nosdcard=0;
+					
+					//read_reg=1;
+					
 			switch (read_reg)
 			{//(temp_miganie/25)%2;
 				case 0:
-					play1_en=0;
-					relay=0;
-					next2=0;
-					play2_en=0;
-					nextS=0;
-					sirena_en=0;
 					break;
 				case 1:
 					play1_en=1;
-					relay=0;
-					next2=0;
-					play2_en=0;
-					nextS=0;
-					sirena_en=0;
 					break;
 				case 2:
-					play1_en=0;
-					relay=0;
-					next2=0;
 					play2_en=1;
-					nextS=0;
-					sirena_en=0;
 					break;
 				case 3:
-					play1_en=0;
-					relay=0;
-					next2=0;
-					play2_en=0;
-					nextS=0;
 					sirena_en=(temp_miganie/25)%2;
 					break;
 				case 4:
-					play1_en=0;
-					relay=0;
 					next2=(temp_miganie/25)%2;
-					play2_en=0;
-					nextS=0;
-					sirena_en=0;
 					break;
 				case 5:
-					play1_en=0;
-					relay=0;
-					next2=0;
-					play2_en=0;
 					nextS=(temp_miganie/25)%2;
-					sirena_en=0;
 					break;
 				case 6:
-					play1_en=0;
 					relay=(temp_miganie/25)%2;
-					next2=0;
-					play2_en=0;
-					nextS=0;
-					sirena_en=0;
 					break;
+				case 9:
+					next_s1 = (temp_miganie/25)%2;
+				break;
+				case 10:
+					next_s2 = (temp_miganie/25)%2;
+				break;
+				case 11:
+					nosdcard=(temp_miganie/25)%2;
+				break;
+				case 12:
+					play_s1 = 1;
+				break;
+				case 13:
+					play_s2 = (temp_miganie/25)%2;
+				break;
+				
 				case 7:
 				default:
-					play1_en=0;
-					relay=0;
-					next2=0;
-					play2_en=0;
-					nextS=0;
-					sirena_en=0;
+					
 					break;
 			}
 			
@@ -289,7 +270,7 @@ if (sirena_en)//!(PINA & (1<<6)))
 {	
 	if ((line > 270) && (line < 298))
 	{
-		delay(70);
+		delay(65);
 		SPSR = 0;
 		ltemp = ((line - 271)/4) * 27 - 64;
 		ntemp = ((line - 271)/4)  * 14 - 45;
@@ -315,7 +296,7 @@ if (sirena_en)//!(PINA & (1<<6)))
 	}
 	if ((line > 265) && (line < 271))
 	{
-		delay(70);
+		delay(65);
 		SPSR = 0;
 		asm("NOP");
 		delay(5);
@@ -327,7 +308,7 @@ if (sirena_en)//!(PINA & (1<<6)))
 	}
 	if ((line > 297) && (line < 303))
 	{
-		delay(70);
+		delay(65);
 		delay(3);
 		black_on;
 		cam_off;
@@ -337,6 +318,112 @@ if (sirena_en)//!(PINA & (1<<6)))
 	}
 
 }
+
+if (play_s1)//!(PINA & (1<<6)))
+{	
+	if ((line > 270) && (line < 298))
+	{
+		delay(55);
+		SPSR = 0;
+		ltemp = ((line - 271)/4) * 27 - 64;
+		ntemp = ((line - 271)/4)  * 14 - 45;
+		black_on;
+		cam_off;
+		SPDR = ltrs_inv['S' + ltemp];		Wait();
+		SPDR = ltrs_inv['I' + ltemp];		Wait();
+		SPDR = ltrs_inv['R' + ltemp];		Wait();
+		SPDR = ltrs_inv['E' + ltemp];		Wait();
+		SPDR = ltrs_inv['N' + ltemp];		Wait();
+		SPDR = ltrs_inv['A' + ltemp];		Wait();
+		SPDR = 0xFF-(nums['1' + ntemp]);		Wait();
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		cam_on;
+		black_off;
+	}
+	if ((line > 265) && (line < 271))
+	{
+		delay(55);
+		SPSR = 0;
+		asm("NOP");
+		delay(5);
+		black_on;
+		cam_off;
+		delay(76);
+		cam_on;
+		black_off;
+	}
+	if ((line > 297) && (line < 303))
+	{
+		delay(55);
+		delay(3);
+		black_on;
+		cam_off;
+		delay(76);
+		cam_on;
+		black_off;
+	}
+
+}
+
+if (play_s2)//!(PINA & (1<<6)))
+{	
+	if ((line > 270) && (line < 298))
+	{
+		delay(55);
+		SPSR = 0;
+		ltemp = ((line - 271)/4) * 27 - 64;
+		ntemp = ((line - 271)/4)  * 14 - 45;
+		black_on;
+		cam_off;
+		SPDR = ltrs_inv['S' + ltemp];		Wait();
+		SPDR = ltrs_inv['I' + ltemp];		Wait();
+		SPDR = ltrs_inv['R' + ltemp];		Wait();
+		SPDR = ltrs_inv['E' + ltemp];		Wait();
+		SPDR = ltrs_inv['N' + ltemp];		Wait();
+		SPDR = ltrs_inv['A' + ltemp];		Wait();
+		SPDR = 0xFF-(nums['2' + ntemp]);		Wait();
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		cam_on;
+		black_off;
+	}
+	if ((line > 265) && (line < 271))
+	{
+		delay(55);
+		SPSR = 0;
+		asm("NOP");
+		delay(5);
+		black_on;
+		cam_off;
+		delay(76);
+		cam_on;
+		black_off;
+	}
+	if ((line > 297) && (line < 303))
+	{
+		delay(55);
+		delay(3);
+		black_on;
+		cam_off;
+		delay(76);
+		cam_on;
+		black_off;
+	}
+
+}
+
+
 
 if (play2_en)//!(PINA & (1<<5)))
 {	
@@ -352,16 +439,7 @@ if (play2_en)//!(PINA & (1<<5)))
 		SPDR = ltrs_inv['L' + ltemp];		Wait();
 		SPDR = ltrs_inv['A' + ltemp];		Wait();
 		SPDR = ltrs_inv['Y' + ltemp];		Wait();
-		SPDR = 0x00;		Wait();
 		SPDR = 0xFF-(nums['2' + ntemp]);		Wait();
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
 		asm("NOP");
 		asm("NOP");
 		asm("NOP");
@@ -376,7 +454,7 @@ if (play2_en)//!(PINA & (1<<5)))
 		delay(5);
 		black_on;
 		cam_off;
-		delay(64);
+		delay(53);
 		cam_on;
 		black_off;
 	}
@@ -386,7 +464,7 @@ if (play2_en)//!(PINA & (1<<5)))
 		delay(3);
 		black_on;
 		cam_off;
-		delay(64);
+		delay(53);
 		cam_on;
 		black_off;
 	}
@@ -407,16 +485,7 @@ if (play1_en)//!(PINA & (1<<4)))
 		SPDR = ltrs_inv['L' + ltemp];		Wait();
 		SPDR = ltrs_inv['A' + ltemp];		Wait();
 		SPDR = ltrs_inv['Y' + ltemp];		Wait();
-		SPDR = 0x00;		Wait();
 		SPDR = 0xFF-(nums['1' + ntemp]);		Wait();
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
-		asm("NOP");
 		asm("NOP");
 		asm("NOP");
 		asm("NOP");
@@ -431,7 +500,7 @@ if (play1_en)//!(PINA & (1<<4)))
 		delay(5);
 		black_on;
 		cam_off;
-		delay(64);
+		delay(53);
 		cam_on;
 		black_off;
 	}
@@ -441,10 +510,11 @@ if (play1_en)//!(PINA & (1<<4)))
 		delay(3);
 		black_on;
 		cam_off;
-		delay(64);
+		delay(53);
 		cam_on;
 		black_off;
 	}
+
 }
 
 
@@ -452,7 +522,7 @@ if (relay)//!(PINA & (1<<4)))
 {	
 	if ((line > 270) && (line < 298))
 	{
-		delay(83);
+		delay(75);
 		SPSR = 0;
 		ltemp = ((line - 271)/4) * 27 - 64;
 		ntemp = ((line - 271)/4)  * 14 - 45;
@@ -472,7 +542,7 @@ if (relay)//!(PINA & (1<<4)))
 	}
 	if ((line > 265) && (line < 271))
 	{
-		delay(83);
+		delay(75);
 		SPSR = 0;
 		asm("NOP");
 		delay(5);
@@ -484,7 +554,7 @@ if (relay)//!(PINA & (1<<4)))
 	}
 	if ((line > 297) && (line < 303))
 	{
-		delay(83);
+		delay(75);
 		delay(3);
 		black_on;
 		cam_off;
@@ -576,6 +646,136 @@ if (nextS)//!(PINA & (1<<4)))
 		black_on;
 		cam_off;
 		delay(31);
+		cam_on;
+		black_off;
+	}
+}
+
+if (next_s1)//!(PINA & (1<<4)))
+{	
+	if ((line > 270) && (line < 298))
+	{
+		delay(75);
+		SPSR = 0;
+		ltemp = ((line - 271)/4) * 27 - 64;
+		ntemp = ((line - 271)/4)  * 14 - 45;
+		black_on;
+		cam_off;
+		SPDR = 0xFF-(nums['/' + ntemp]);		Wait();
+		SPDR = 0xFF-(nums['/' + ntemp]);		Wait();
+		SPDR = ltrs_inv['S' + ltemp];		Wait();
+		SPDR = 0xFF-(nums['1' + ntemp]);		Wait();
+		asm("NOP");
+		cam_on;
+		black_off;
+	}
+	if ((line > 265) && (line < 271))
+	{
+		delay(75);
+		SPSR = 0;
+		asm("NOP");
+		delay(5);
+		black_on;
+		cam_off;
+		delay(42);
+		cam_on;
+		black_off;
+	}
+	if ((line > 297) && (line < 303))
+	{
+		delay(75);
+		delay(3);
+		black_on;
+		cam_off;
+		delay(42);
+		cam_on;
+		black_off;
+	}
+}
+
+if (next_s2)//!(PINA & (1<<4)))
+{	
+	if ((line > 270) && (line < 298))
+	{
+		delay(75);
+		SPSR = 0;
+		ltemp = ((line - 271)/4) * 27 - 64;
+		ntemp = ((line - 271)/4)  * 14 - 45;
+		black_on;
+		cam_off;
+		SPDR = 0xFF-(nums['/' + ntemp]);		Wait();
+		SPDR = 0xFF-(nums['/' + ntemp]);		Wait();
+		SPDR = ltrs_inv['S' + ltemp];		Wait();
+		SPDR = 0xFF-(nums['2' + ntemp]);		Wait();
+		asm("NOP");
+		cam_on;
+		black_off;
+	}
+	if ((line > 265) && (line < 271))
+	{
+		delay(75);
+		SPSR = 0;
+		asm("NOP");
+		delay(5);
+		black_on;
+		cam_off;
+		delay(42);
+		cam_on;
+		black_off;
+	}
+	if ((line > 297) && (line < 303))
+	{
+		delay(75);
+		delay(3);
+		black_on;
+		cam_off;
+		delay(42);
+		cam_on;
+		black_off;
+	}
+}
+
+if (nosdcard)//!(PINA & (1<<5)))
+{	
+	if ((line > 270) && (line < 298))
+	{
+		delay(80);
+		SPSR = 0;
+		ltemp = ((line - 271)/4) * 27 - 64;
+		ntemp = ((line - 271)/4)  * 14 - 45;
+		black_on;
+		cam_off;
+		SPDR = ltrs_inv['N' + ltemp];		Wait();
+		SPDR = ltrs_inv['O' + ltemp];		Wait();
+		SPDR = 0x00; Wait();
+		SPDR = ltrs_inv['S' + ltemp];		Wait();
+		SPDR = ltrs_inv['D' + ltemp];		Wait();
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		asm("NOP");
+		cam_on;
+		black_off;
+	}
+	if ((line > 265) && (line < 271))
+	{
+		delay(80);
+		SPSR = 0;
+		asm("NOP");
+		delay(5);
+		black_on;
+		cam_off;
+		delay(51);
+		cam_on;
+		black_off;
+	}
+	if ((line > 297) && (line < 303))
+	{
+		delay(80);
+		delay(3);
+		black_on;
+		cam_off;
+		delay(51);
 		cam_on;
 		black_off;
 	}
