@@ -679,34 +679,46 @@
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/imageViewCathodeAlarm1"
-                            android:src="@drawable/led_gray" />
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
+
+                            <ImageView
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:id="@+id/imageViewCathodeAlarm1"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="Обрыв выходного кабеляa"
+                            android:text="Обрыв выходного кабеля"
                             android:id="@+id/textViewCathodeAlarm1"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
+                            android:textColor="@color/gray_time"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/imageViewCathodeAlarm2"
-                            android:src="@drawable/led_gray" />
-
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
+                            <ImageView
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:id="@+id/imageViewCathodeAlarm2"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -714,107 +726,135 @@
                             android:text="Обрыв кабеля эл. сравн."
                             android:id="@+id/textViewCathodeAlarm2"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
+                            android:textColor="@color/gray_time"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
                         <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageViewCathodeAlarm3"
+                            android:layout_gravity="center" />
+                            </LinearLayout>
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/imageViewCathodeAlarm3"
-                            android:src="@drawable/led_gray" />
-
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="КЗ-1 (аппаратное)"
+                            android:id="@+id/textViewCathodeAlarm3"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/gray_time"
+                            android:layout_marginTop="3dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageViewCathodeAlarm4"
+                            android:layout_gravity="center" />
+</LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="КЗ-2 (программное)"
+                            android:id="@+id/textViewCathodeAlarm4"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/gray_time"
+                            android:layout_marginTop="3dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageViewCathodeAlarm5"
+                            android:layout_gravity="center" />
+</LinearLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Перенапряжение сети"
-                            android:id="@+id/textViewCathodeAlarm3"
+                            android:id="@+id/textViewCathodeAlarm5"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
+                            android:textColor="@color/gray_time"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/imageViewCathodeAlarm4"
-                            android:src="@drawable/led_gray" />
-
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageViewCathodeAlarm6"
+                            android:layout_gravity="center" />
+</LinearLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Перегрев"
-                            android:id="@+id/textViewCathodeAlarm4"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/imageViewCathodeAlarm5"
-                            android:src="@drawable/led_gray" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="Нет связи с БУ (RS-485)"
-                            android:id="@+id/textViewCathodeAlarm5"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/imageViewCathodeAlarm6"
-                            android:src="@drawable/led_gray" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="КЗ-1"
                             android:id="@+id/textViewCathodeAlarm6"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
+                            android:textColor="@color/gray_time"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp">
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
                             android:id="@+id/imageViewCathodeAlarm7"
-                            android:src="@drawable/led_gray" />
-
+                            android:layout_gravity="center"
+                            android:src="@drawable/led_green" />
+</LinearLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="КЗ-2"
+                            android:text="Нет связи с БУ"
                             android:id="@+id/textViewCathodeAlarm7"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/gray_time" />
+                            android:textColor="@color/red"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                 </LinearLayout>

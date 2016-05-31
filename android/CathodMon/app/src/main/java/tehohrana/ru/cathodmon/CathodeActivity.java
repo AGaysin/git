@@ -93,6 +93,10 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
     ImageView mImageViewAlarm1,mImageViewAlarm2,mImageViewAlarm3,mImageViewAlarm4,
             mImageViewAlarm5,mImageViewAlarm6,mImageViewAlarm7;
+
+    TextView mTextViewAlarm1,mTextViewAlarm2,mTextViewAlarm3,mTextViewAlarm4,
+            mTextViewAlarm5,mTextViewAlarm6,mTextViewAlarm7;
+
     Button mButtonValStabParam;
 
 
@@ -101,6 +105,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
     mLinearLayoutCathodeAlarms;
     int dbId;
     int dbDeviceType;
+    int dbSignalType;
 
     int smsProtocolType=0;
     private static long timerSmsCommandWaiting;
@@ -187,6 +192,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                     switch (mControlSetParam) {
                         case 0:
                             intVaue = Math.round(floatValue);
+                            if (intVaue >= 100) intVaue = 100;
                             mSeekBarControlSetValue.setProgress(intVaue);
                             break;
                         case 1:
@@ -199,14 +205,14 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                             mSeekBarControlSetValue.setProgress(intVaue);
                             break;
                     }
-                }
-                catch (Exception ex)
-                {
-                    Toast.makeText(getBaseContext(),"Error parsing float to int: " + ex.toString(),Toast.LENGTH_LONG).show();
+                } catch (Exception ex) {
+                    Toast.makeText(getBaseContext(), "Error parsing float to int: " + ex.toString(), Toast.LENGTH_LONG).show();
                 }
                 return false;
             }
         });
+
+
         mSeekBarControlSetValue.setOnSeekBarChangeListener(this);
 
 
@@ -230,6 +236,18 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         mTextViewValHeater = (TextView)findViewById(R.id.textViewCathodeHeater);
         mTextViewValStabRs = (TextView)findViewById(R.id.textViewCathodeStabRsVal);
         mTextViewValStabUniver = (TextView)findViewById(R.id.textViewCathodeStabUniverVal);
+
+
+        //textViewCathodeAlarm1
+        mTextViewAlarm1 = (TextView)findViewById(R.id.textViewCathodeAlarm1);
+        mTextViewAlarm2 = (TextView)findViewById(R.id.textViewCathodeAlarm2);
+        mTextViewAlarm3 = (TextView)findViewById(R.id.textViewCathodeAlarm3);
+        mTextViewAlarm4 = (TextView)findViewById(R.id.textViewCathodeAlarm4);
+        mTextViewAlarm5 = (TextView)findViewById(R.id.textViewCathodeAlarm5);
+        mTextViewAlarm6 = (TextView)findViewById(R.id.textViewCathodeAlarm6);
+        mTextViewAlarm7 = (TextView)findViewById(R.id.textViewCathodeAlarm7);
+
+
 
         mImageViewAlarm1 = (ImageView)findViewById(R.id.imageViewCathodeAlarm1);
         mImageViewAlarm2 = (ImageView)findViewById(R.id.imageViewCathodeAlarm2);
@@ -755,7 +773,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         int dbPosition = getIntent().getIntExtra("db_cathode_position", 0);
         dbId=0;
         dbDeviceType=0;
-
+        dbSignalType = 0;
         if (cursor.moveToPosition(dbPosition))
         {
 
@@ -767,6 +785,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
             dbDeviceType = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.DEVICE_COLUMN));
 
 
+
             int uiTemp;
             long ulTemp;
 
@@ -774,9 +793,59 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
             {
                 mControlSetParam = 0;
                 //Универсальный
-                if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.SIGNAL_COOLUMN))==0)
+                dbSignalType = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.SIGNAL_COOLUMN));
+                if (dbSignalType==0) {
                     mTextViewCathodeType.setText("Универсальный (4-20 мА)");
-                else mTextViewCathodeType.setText("Универсальный (0-5 В)");
+
+                    uiTemp = (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))-204)*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/(1023-204);
+                    if (uiTemp<0) uiTemp=0;
+                    mTextViewValU.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
+
+                    uiTemp = (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))-204)*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/(1023-204);
+                    if (uiTemp<0) uiTemp=0;
+                    mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+                    uiTemp = (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))-204)*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/(1023-204);
+                    if (uiTemp<0) uiTemp=0;
+                    mTextViewValP.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
+
+                    //Управление
+                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
+                    uiTemp = (uiTemp-204)*100/(1023-204);
+                    if (uiTemp<0) uiTemp=0;
+                    mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
+                    mControlSetParam = 0;
+                    mSeekBarControlSetValue.setMax(100);
+                    mTextViewControlSetValue.setText("Установите величину управления, %");
+                    mSeekBarControlSetValue.setProgress(uiTemp);
+                    mEditTextControlSetValue.setText(String.valueOf(uiTemp));
+                    mTextViewValStabUniver.setText(String.valueOf(uiTemp));
+                }
+                else
+                {
+                    mTextViewCathodeType.setText("Универсальный (0-5 В)");
+
+                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/1023;
+                    mTextViewValU.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
+
+                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/1023;
+                    mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
+
+                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/1023;
+                    mTextViewValP.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
+
+
+                    //Управление
+                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
+                    uiTemp = uiTemp*100/1023;
+                    mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
+                    mControlSetParam = 0;
+                    mSeekBarControlSetValue.setMax(100);
+                    mTextViewControlSetValue.setText("Установите величину управления, %");
+                    mSeekBarControlSetValue.setProgress(uiTemp);
+                    mEditTextControlSetValue.setText(String.valueOf(uiTemp));
+                    mTextViewValStabUniver.setText(String.valueOf(uiTemp));
+                }
                 mTextViewValTc.setVisibility(View.VISIBLE);
                 mLinearLayoutUseti.setVisibility(View.GONE);
                 mLinearLayoutCathodeAlarms.setVisibility(View.GONE);
@@ -785,28 +854,15 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
 
 
-                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/1024;
-                mTextViewValU.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
 
-                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/1024;
-                mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
 
-                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/1024;
-                mTextViewValP.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
 
                 if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_SCALE_COLUMN))>0) ulTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_BEGIN_COLUMN))*10 + (int)(((float)(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_CNT_COLUMN))*10))/(float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.CNT_SCALE_COLUMN)));
                 else ulTemp=0;
                 mTextViewValCnt.setText(String.valueOf(ulTemp/10) + "."+String.valueOf(ulTemp%10));
 
 
-                uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
-                        mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
-                        mControlSetParam = 0;
-                        mSeekBarControlSetValue.setMax(100);
-                        mTextViewControlSetValue.setText("Установите величину управления, %");
-                        mSeekBarControlSetValue.setProgress(uiTemp);
-                        mEditTextControlSetValue.setText(String.valueOf(uiTemp));
-                        mTextViewValStabUniver.setText(String.valueOf(uiTemp));
+
 
             }
             else
@@ -841,6 +897,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                     case 1:
                         mButtonValStabParam.setText("Напряжение, В (Изменить)");
                         mControlSetParam = 1;
+                        mRadioButtonU.setChecked(true);
                         mSeekBarControlSetValue.setMax(990);
                         mTextViewControlSetValue.setText("Установите величину выходного напряжения, В");
                         mSeekBarControlSetValue.setProgress(uiTemp);
@@ -850,6 +907,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                     case 2:
                         mButtonValStabParam.setText("Ток, А (Изменить)");
                         mControlSetParam = 2;
+                        mRadioButtonI.setChecked(true);
                         mSeekBarControlSetValue.setMax(990);
                         mTextViewControlSetValue.setText("Установите величину выходного тока, А");
                         mSeekBarControlSetValue.setProgress(uiTemp);
@@ -859,6 +917,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                     case 3:
                         mButtonValStabParam.setText("Потенциал, В (Изменить)");
                         mControlSetParam = 3;
+                        mRadioButtonP.setChecked(true);
                         mSeekBarControlSetValue.setMax(500);
                         mTextViewControlSetValue.setText("Установите величину защитного потенциала, В");
                         mSeekBarControlSetValue.setProgress(uiTemp);
@@ -939,47 +998,78 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
             else mTextViewValStabRs.setTextColor(getResources().getColor(R.color.red));
 
 
-            if ((tsStatus & (1<<1)) ==0)
+            if ((tsStatus & (1<<1)) ==0) {
+                mImageViewAlarm1.setImageResource(android.R.color.transparent);
+                mTextViewAlarm1.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else {
                 mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm1.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm1.setTextColor(getResources().getColor(R.color.red));
+            }
 
-            if ((tsStatus & (1<<2)) ==0)
+            if ((tsStatus & (1<<2)) ==0) {
+                mImageViewAlarm2.setImageResource(android.R.color.transparent);
+                mTextViewAlarm2.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else {
                 mImageViewAlarm2.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm2.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm2.setTextColor(getResources().getColor(R.color.red));
+            }
 
-            if ((tsStatus & (1<<3)) ==0)
+            if ((tsStatus & (1<<3)) ==0) {
+                mImageViewAlarm3.setImageResource(android.R.color.transparent);
+                mTextViewAlarm3.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else {
                 mImageViewAlarm3.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm3.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm3.setTextColor(getResources().getColor(R.color.red));
+            }
 
-            if ((tsStatus & (1<<4)) ==0)
+            if ((tsStatus & (1<<4)) ==0) {
+                mImageViewAlarm4.setImageResource(android.R.color.transparent);
+                mTextViewAlarm4.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else {
                 mImageViewAlarm4.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm4.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm4.setTextColor(getResources().getColor(R.color.red));
+            }
 
-            if ((tsStatus & (1<<5)) ==0)
+            if ((tsStatus & (1<<5)) ==0) {
+                mImageViewAlarm5.setImageResource(android.R.color.transparent);
+                mTextViewAlarm5.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else
+            {
                 mImageViewAlarm5.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm5.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm5.setTextColor(getResources().getColor(R.color.red));
+            }
 
-            if ((tsStatus & (1<<6)) ==0)
+            if ((tsStatus & (1<<6)) ==0) {
+                mImageViewAlarm6.setImageResource(android.R.color.transparent);
+                mTextViewAlarm6.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else
+            {
                 mImageViewAlarm6.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm6.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm6.setTextColor(getResources().getColor(R.color.red));
+            }
 
-            if ((tsStatus & (1<<7)) ==0)
+            if ((tsStatus & (1<<7)) ==0) {
+                mImageViewAlarm7.setImageResource(android.R.color.transparent);
+                mTextViewAlarm7.setTextColor(getResources().getColor(R.color.gray_time));
+            }
+            else
+            {
                 mImageViewAlarm7.setImageBitmap(BitmapFactory.decodeResource(
-                        this.getResources(), R.drawable.led_gray));
-            else mImageViewAlarm7.setImageBitmap(BitmapFactory.decodeResource(
-                    this.getResources(), R.drawable.led_green));
+                        this.getResources(), R.drawable.led_green));
+                mTextViewAlarm7.setTextColor(getResources().getColor(R.color.red));
+            }
 
 
 
@@ -1003,13 +1093,29 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                 smsProtocolType = 0;
 
 
-                int valueSet = mSeekBarControlSetValue.getProgress();
+                //int valueSet = mSeekBarControlSetValue.getProgress();
+                int valueSet = Math.round(Float.parseFloat(mEditTextControlSetValue.getText().toString()));
+
                 if (dbDeviceType==0)
                 {
                     //03XXXX00
-                    int valSend = (1023*valueSet)/100;
+
+                    int valSend;
+
+                    if (dbSignalType==0)
+                    {
+                        //4-20mA
+                        valSend = (((1023-204)*valueSet)/100) + 204;
+
+                    }
+                    else {
+                        valSend = (1023*valueSet)/100;
+
+                    }
+
                     char valSendByte1 = (char)(valSend/256);
                     char valSendByte2 = (char)(valSend%256);
+
                     //String s = "\u0300" + Character.toString((char)(valueSet<<8));
                     String s = Character.toString((char)(0x0300 | valSendByte1)) + Character.toString((char)(valSendByte2<<8));
                     sendSMS(mDevicePhoneNumber, s);
@@ -1077,13 +1183,13 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
         if (dbDeviceType==0)
         {
             mLinearLayoutControlSetRs.setVisibility(View.GONE);
-            mSeekBarControlSetValue.setMax(100);
-            mTextViewControlSetValue.setText("Установите величину управления, %");
+            //mSeekBarControlSetValue.setMax(100);
+            //mTextViewControlSetValue.setText("Установите величину управления, %");
         }
         else
         {
-            mSeekBarControlSetValue.setMax(990);
-            mTextViewControlSetValue.setText("Установите величину выходного тока, А");
+            //mSeekBarControlSetValue.setMax(990);
+            //mTextViewControlSetValue.setText("Установите величину выходного тока, А");
             mLinearLayoutControlSetRs.setVisibility(View.VISIBLE);
         }
     }
