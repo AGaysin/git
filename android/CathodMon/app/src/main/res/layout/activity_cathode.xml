@@ -702,7 +702,7 @@
                             android:id="@+id/textViewCathodeAlarm1"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/gray_time"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
@@ -727,7 +727,7 @@
                             android:id="@+id/textViewCathodeAlarm2"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/gray_time"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
@@ -753,7 +753,7 @@
                             android:id="@+id/textViewCathodeAlarm3"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/gray_time"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
@@ -778,7 +778,7 @@
                             android:id="@+id/textViewCathodeAlarm4"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/gray_time"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
@@ -803,7 +803,7 @@
                             android:id="@+id/textViewCathodeAlarm5"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/gray_time"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
@@ -828,7 +828,7 @@
                             android:id="@+id/textViewCathodeAlarm6"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/gray_time"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="horizontal"
@@ -838,7 +838,8 @@
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="20dp"
-                            android:layout_height="20dp">
+                            android:layout_height="20dp"
+                            android:layout_gravity="center">
                         <ImageView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
@@ -854,7 +855,7 @@
                             android:id="@+id/textViewCathodeAlarm7"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/red"
-                            android:layout_marginTop="3dp" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
 
                 </LinearLayout>

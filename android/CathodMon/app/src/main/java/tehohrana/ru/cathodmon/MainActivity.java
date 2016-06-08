@@ -302,7 +302,17 @@ public class MainActivity extends AppCompatActivity
                 dataBaseEvents[i]=cursor.getString(cursor.getColumnIndex(DatabaseHelper.TEXT_COLUMN));
                 itemId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
                 dataBaseDates[i]="id: " + itemId;
-                dataBaseIcons[i]=R.drawable.add_icon;
+                if (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.DEVICE_COLUMN))==0)
+                {
+                    //Универсальная СКЗ
+                    dataBaseIcons[i]=R.drawable.skz_univ;
+                }
+                else
+                {
+                    //Интерфейсная СКЗ
+                    dataBaseIcons[i]=R.drawable.skz_rs485;
+                }
+
                 i++;
                 cursor.moveToNext();
             }

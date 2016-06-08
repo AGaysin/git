@@ -788,6 +788,7 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
 
             int uiTemp;
             long ulTemp;
+            float flTemp;
 
             if (dbDeviceType==0)
             {
@@ -797,21 +798,20 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                 if (dbSignalType==0) {
                     mTextViewCathodeType.setText("Универсальный (4-20 мА)");
 
-                    uiTemp = (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))-204)*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/(1023-204);
+                    uiTemp = Math.round(((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))-204)*(float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/(1023-204));
                     if (uiTemp<0) uiTemp=0;
                     mTextViewValU.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
 
-                    uiTemp = (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))-204)*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/(1023-204);
+                    uiTemp = Math.round(((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))-204)*(float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/(1023-204));
                     if (uiTemp<0) uiTemp=0;
                     mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
 
-                    uiTemp = (cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))-204)*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/(1023-204);
+                    uiTemp = Math.round(((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))-204)*(float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/(1023-204));
                     if (uiTemp<0) uiTemp=0;
                     mTextViewValP.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
 
                     //Управление
-                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
-                    uiTemp = (uiTemp-204)*100/(1023-204);
+                    uiTemp = Math.round(((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN))-204)*100/(1023-204));
                     if (uiTemp<0) uiTemp=0;
                     mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
                     mControlSetParam = 0;
@@ -825,19 +825,18 @@ public class CathodeActivity extends Activity implements SeekBar.OnSeekBarChange
                 {
                     mTextViewCathodeType.setText("Универсальный (0-5 В)");
 
-                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/1023;
+                    uiTemp = Math.round((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_U_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.UMAX_COLUMN))*10/1023);
                     mTextViewValU.setText(String.valueOf(uiTemp / 10) + "." + String.valueOf(uiTemp % 10));
 
-                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/1023;
+                    uiTemp = Math.round((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_I_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.IMAX_COLUMN))*10/1023);
                     mTextViewValI.setText(String.valueOf(uiTemp/10) + "."+String.valueOf(uiTemp%10));
 
-                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/1023;
+                    uiTemp = Math.round((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_P_COLUMN))*cursor.getInt(cursor.getColumnIndex(DatabaseHelper.FIMAX_COLUMN))*100/1023);
                     mTextViewValP.setText(String.valueOf(uiTemp / 100) + "." + String.valueOf(uiTemp % 100));
 
 
                     //Управление
-                    uiTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN));
-                    uiTemp = uiTemp*100/1023;
+                    uiTemp = Math.round((float)cursor.getInt(cursor.getColumnIndex(DatabaseHelper.VAL_STAB_VAL_COLUMN))*100/1023);
                     mButtonValStabParam.setText("Неизвестный параметр (Изменить)");
                     mControlSetParam = 0;
                     mSeekBarControlSetValue.setMax(100);
